@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "aws_iam_role" "consul" {
   name_prefix        = "${var.environment_name}-consul"
   assume_role_policy = data.aws_iam_policy_document.ec2_assumerole.json

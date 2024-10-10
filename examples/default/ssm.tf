@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 locals {
   license_text = var.license_text != "" ? var.license_text : file("${path.module}/consul.hclic")
 }

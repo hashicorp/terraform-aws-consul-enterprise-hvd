@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 variable "gossip_encryption_key" {
   type        = string
   description = "Consul gossip encryption key (consul keygen)"

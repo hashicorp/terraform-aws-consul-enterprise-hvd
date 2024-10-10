@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "aws_launch_template" "consul" {
   name                   = local.template_name
   update_default_version = true

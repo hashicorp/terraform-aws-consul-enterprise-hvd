@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "aws_route53_resolver_endpoint" "consul" {
   count     = var.route53_resolver_pool.enabled ? 1 : 0
   name      = "${var.environment_name}-resolver"
