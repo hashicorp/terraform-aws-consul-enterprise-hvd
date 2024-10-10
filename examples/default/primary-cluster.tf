@@ -31,7 +31,7 @@ data "aws_ami" "amazonlinux" {
 }
 
 module "servers" {
-  source = "git@github.com:hashicorp-services/terraform-aws-consul-ec2.git"
+  source = "../../"
 
   # Instance Configuration
   ami_id               = data.aws_ami.amazonlinux.id
