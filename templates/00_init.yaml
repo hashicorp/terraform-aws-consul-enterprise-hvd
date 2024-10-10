@@ -1,0 +1,9 @@
+## template: jinja
+#cloud-config
+fs_setup:
+  - label: consul
+    filesystem: ext4
+    device: /dev/sdf
+    partition: auto
+mounts:
+  - [/dev/sdf, /var/lib/consul, auto, defaults, 0, 2]
