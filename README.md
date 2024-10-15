@@ -2,6 +2,8 @@
 
 Terraform module aligned with HashiCorp Validated Designs (HVD) to deploy Consul Enterprise on Amazon Web Services (AWS) using EC2 instances. It provides options for defining the size of the cluster and options to use redundancy zones.
 
+![Consul on AWS](https://raw.githubusercontent.com/hashicorp/terraform-aws-consul-enterprise-hvd/main/docs/_assets/images/consul_aws_vms.png)
+
 ## Prerequisites
 
 This module requires the following to already be in place in AWS:
