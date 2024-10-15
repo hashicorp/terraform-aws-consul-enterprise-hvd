@@ -1,32 +1,105 @@
-# Example Scenario - Amazon Linux | Internal Network Load Balancer (NLB) | Primary Consul cluster
+# Example deployment
+
+In this deployment the requirements are kept to a minimum and should provide an example of how resources are used but **not to be used in production**.
+
+Data sources are configured to find the default VPC in the current account and region and deploy to the public subnets. TLS certificates are generated via Terraform and an initial root token is also injected via cloud-init. TLS certificates are created with appropriate flags and are created and automatically added to SSM secrets.
+
+## Usage
+
+    ```shell
+    # enter default example
+    cd examples/default
+    # create the license file
+    echo $CONSUL_LICENSE > consul.hclic
+    # export AWS creds (you could use a profile too)
+    export AWS_ACCESS_KEY_ID=ASIABASE32ENCODEDNU5
+    export AWS_SECRET_ACCESS_KEY=BigLongbase64encodedtextthatissecretOEcJ
+    export AWS_SESSION_TOKEN=AnotherbigLongbase64encodedtext
+    export AWS_ACCOUNT_ID=012345678901
+    # and region
+    export AWS_DEFAULT_REGION=ap-southeast-2
+    # now the Terraform part
+    terraform init -upgrade
+    terraform apply
+
+    # now you should be able to SSH into the instances
+    ssh -i consul-server.pem ec2-user@x.x.x.x
+    # from there you can tune consul as needed.
+    sudo -i
+    complete -C /usr/local/bin/consul consul
+    export CONSUL_CACERT=/etc/consul.d/tls/consul-ca.pem
+    export CONSUL_HTTP_ADDR=127.0.0.1:8501
+    export CONSUL_HTTP_SSL=true
+    export CONSUL_HTTP_TOKEN=2e5d48fd-a8da-bd2e-d9de-1ad409716a4f
+    export CONSUL_TLS_SERVER_NAME=server.dc1.consul
+    consul operator raft list-peers
+    ```
+
+    To create a DNS policy and token you can follow the deployment guide to the [Create server tokens](https://developer.hashicorp.com/consul/tutorials/get-started-vms/virtual-machine-gs-deploy#create-server-tokens) section.
 
 
+    ```shell
+    tee ./acl-policy-dns.hcl > /dev/null << EOF
+    ## dns-request-policy.hcl
+    node_prefix "" {
+      policy = "read"
+    }
+    service_prefix "" {
+      policy = "read"
+    }
+    # Required if you use prepared queries
+    query_prefix "" {
+      policy = "read"
+    }
+    EOF
+    consul acl policy create -name 'acl-policy-dns' -description 'Policy for DNS endpoints' -rules @./acl-policy-dns.hcl
+    consul acl token create -description 'DNS - Default token' -policy-name acl-policy-dns --format json | tee ./acl-token-dns.json
+    consul acl set-agent-token dns token-from-the-secret-listed-above
+    ```
+
+## Notes
+
+For a production system you should not use some of the options set in this example:
+
+- Bootstrap the ACLs and don't use `var.initial_token`
+- Don't generate TLS certificates in Terraform
 
 <!-- BEGIN_TF_DOCS -->
-## Requirements
 
-| Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.0.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.65 |
-| <a name="requirement_cloudinit"></a> [cloudinit](#requirement\_cloudinit) | >= 2.2.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.65 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+| <a name="provider_local"></a> [local](#provider\_local) | n/a |
+| <a name="provider_tls"></a> [tls](#provider\_tls) | n/a |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_consul_servers_primary"></a> [consul\_servers\_primary](#module\_consul\_servers\_primary) | ../.. | n/a |
+| <a name="module_consul_servers_development"></a> [consul\_servers\_development](#module\_consul\_servers\_development) | ../.. | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
+| [aws_key_pair.server_ssh](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair) | resource |
+| [aws_s3_bucket.snapshots](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
+| [aws_s3_bucket_public_access_block.deny](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
+| [aws_s3_bucket_server_side_encryption_configuration.snapshots](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
+| [aws_ssm_parameter.consul_agent_cert](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.consul_agent_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.consul_ca_cert](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.consul_license_text](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [local_sensitive_file.consul_ssh](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/sensitive_file) | resource |
+| [tls_cert_request.server](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/cert_request) | resource |
+| [tls_locally_signed_cert.server](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/locally_signed_cert) | resource |
+| [tls_private_key.consul_ca](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) | resource |
+| [tls_private_key.server](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) | resource |
+| [tls_private_key.server_ssh](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) | resource |
+| [tls_self_signed_cert.consul_ca](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/self_signed_cert) | resource |
 | [aws_ami.amazonlinux](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
 | [aws_subnets.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnets) | data source |
 | [aws_vpc.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc) | data source |
@@ -54,7 +127,10 @@
 | <a name="input_consul_install_version"></a> [consul\_install\_version](#input\_consul\_install\_version) | Version of Consul to install, eg. '1.19.0+ent' | `string` | `"1.19.2+ent"` | no |
 | <a name="input_consul_nodes"></a> [consul\_nodes](#input\_consul\_nodes) | Number of Consul nodes to deploy. | `number` | `3` | no |
 | <a name="input_disk_params"></a> [disk\_params](#input\_disk\_params) | Disk parameters to use for the cluster nodes' block devices. | <pre>object({<br/>    root = object({<br/>      volume_type = string,<br/>      volume_size = number,<br/>      iops        = number<br/>    }),<br/>    data = object({<br/>      volume_type = string,<br/>      volume_size = number,<br/>      iops        = number<br/>    })<br/>  })</pre> | <pre>{<br/>  "data": {<br/>    "iops": 5000,<br/>    "volume_size": 100,<br/>    "volume_type": "io1"<br/>  },<br/>  "root": {<br/>    "iops": 0,<br/>    "volume_size": 32,<br/>    "volume_type": "gp2"<br/>  }<br/>}</pre> | no |
+| <a name="input_gossip_encryption_key"></a> [gossip\_encryption\_key](#input\_gossip\_encryption\_key) | Consul gossip encryption key (consul keygen) | `string` | `"ITyqw6xrOrApx9B6P6k+HdFH8UD9M1UXu8XL6ZzWWJM="` | no |
+| <a name="input_initial_token"></a> [initial\_token](#input\_initial\_token) | A UUID to use as the initial management token/snaphot token | `string` | `"2e5d48fd-a8da-bd2e-d9de-1ad409716a4f"` | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | EC2 instance type to launch. | `string` | `"m5.large"` | no |
+| <a name="input_license_text"></a> [license\_text](#input\_license\_text) | Enterprise license file contents (alternatively create consul.hclic) | `string` | `""` | no |
 | <a name="input_permit_all_egress"></a> [permit\_all\_egress](#input\_permit\_all\_egress) | Whether broad (0.0.0.0/0) egress should be permitted on cluster nodes. If disabled, additional rules must be added to permit HTTP(S) and other necessary network access. | `bool` | `true` | no |
 | <a name="input_route53_resolver_pool"></a> [route53\_resolver\_pool](#input\_route53\_resolver\_pool) | Enable .consul domain resolution with Route53 | <pre>object({<br/>    enabled         = bool<br/>    override_domain = optional(string)<br/>  })</pre> | <pre>{<br/>  "enabled": false<br/>}</pre> | no |
 | <a name="input_server_redundancy_zones"></a> [server\_redundancy\_zones](#input\_server\_redundancy\_zones) | Whether Consul Enterprise Redundancy Zones should be enabled. Requires an even number of server nodes spread across 3+ availability zones. | `bool` | `false` | no |

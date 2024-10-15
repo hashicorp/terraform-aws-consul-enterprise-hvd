@@ -17,7 +17,7 @@ terraform {
 provider "aws" {
   region = var.region
 }
-module "consul_servers" {
+module "consul_servers_primary" {
   source = "../.."
 
   # Instance Configuration

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MPL-2.0
 
 locals {
-  license_text = var.license_text != "" ? var.license_text : file("${path.module}/consul.hclic")
+  license_text = var.license_text != "" ? var.license_text : file("${path.cwd}/files/consul.hclic")
 }
 
 resource "aws_ssm_parameter" "consul_license_text" {
