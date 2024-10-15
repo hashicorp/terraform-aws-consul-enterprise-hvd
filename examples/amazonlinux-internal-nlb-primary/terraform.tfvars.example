@@ -1,0 +1,56 @@
+additional_gossip_cidrs       = []
+additional_grpc_tls_cidrs     = []
+additional_security_group_ids = []
+ami_id                        = null
+asg_extra_tags                = []
+associate_public_ip           = true
+autopilot_health_enabled      = true
+consul_agent = {
+  agent_cert_arn        = "<my-consul-agent_cert_arn>"
+  agent_key_arn         = "<my-consul-agent_key_arn>"
+  bootstrap             = true
+  ca_cert_arn           = "<my-consul-ca_cert_arn>"
+  consul_log_level      = ""
+  datacenter            = "dc1"
+  domain                = "consul"
+  gossip_encryption_key = ""
+  initial_token         = ""
+  license_text_arn      = "<my-consul-license-secret-arn>"
+  primary_datacenter    = "dc1"
+  ui                    = true
+}
+consul_cluster_version = "0.0.1"
+consul_install_version = "1.19.2+ent"
+consul_nodes           = 3
+disk_params = {
+  data = {
+    iops        = 5000
+    volume_size = 100
+    volume_type = "io1"
+  }
+  root = {
+    iops        = 0
+    volume_size = 32
+    volume_type = "gp2"
+  }
+}
+environment_name     = "production"
+instance_subnets     = null
+instance_type        = "m5.large"
+internal_nlb_subnets = null
+key_name             = null
+permit_all_egress    = true
+route53_resolver_pool = {
+  enabled         = false
+  override_domain = null
+}
+server_redundancy_zones = false
+snapshot_agent = {
+  enabled      = false
+  interval     = ""
+  retention    = 0
+  s3_bucket_id = ""
+  token        = ""
+}
+tag_owner = null
+vpc_id    = null
