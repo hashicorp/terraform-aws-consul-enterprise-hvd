@@ -10,11 +10,13 @@ variable "asg_extra_tags" {
 variable "consul_install_version" {
   type        = string
   description = "Version of Consul to install, eg. '1.19.0+ent'"
+  default     = "1.19.2+ent"
 }
 
 variable "consul_cluster_version" {
   type        = string
   description = "SemVer version string representing the cluster's deployent iteration. Must always be incremented when deploying updates (e.g. new AMIs, updated launch config)"
+  default     = "0.0.1"
 }
 
 variable "tag_owner" {
@@ -22,7 +24,6 @@ variable "tag_owner" {
   description = "Denotes the user/entity responsible for deployment of this cluster."
 }
 
-# TODO: Combine subnet configuration vars into their own object? Maybe a unified network config with gateways and DNS?
 variable "instance_subnets" {
   type        = list(string)
   description = "List of AWS subnet IDs for instance(s) to be deployed into."
@@ -125,7 +126,7 @@ variable "environment_name" {
 
 variable "consul_agent" {
   type = object({
-    bootstrap             = bool
+    bootstrap             = optional(bool, true)
     domain                = optional(string, "consul")
     datacenter            = string
     gossip_encryption_key = string
@@ -136,9 +137,23 @@ variable "consul_agent" {
     agent_cert_arn        = string
     agent_key_arn         = string
     initial_token         = string
-    ui                    = bool
+    ui                    = optional(bool, true)
   })
   description = "Config object for the Consul Agent (Server/Client)"
+  default = {
+    bootstrap             = true
+    domain                = "consul"
+    datacenter            = "dc1"
+    gossip_encryption_key = ""
+    consul_log_level      = ""
+    license_text_arn      = ""
+    primary_datacenter    = "dc1"
+    ca_cert_arn           = ""
+    agent_cert_arn        = ""
+    agent_key_arn         = ""
+    initial_token         = ""
+    ui                    = true
+  }
 }
 
 variable "snapshot_agent" {
