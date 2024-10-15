@@ -1,4 +1,4 @@
-# Example deployment
+# Example Scenario - Amazon Linux | Internal Network Load Balancer (NLB) | Development Consul cluster
 
 In this deployment the requirements are kept to a minimum and should provide an example of how resources are used but **not to be used in production**.
 
