@@ -49,8 +49,8 @@ snapshot_agent = {
   enabled      = false
   interval     = ""
   retention    = 0
-  s3_bucket_id = ""
+  s3_bucket_id = "<my-aws_s3_bucket_id>"
   token        = ""
 }
-tag_owner = null
-vpc_id    = null
+tag_owner = <@example.com>
+vpc_id    = <my-vpc-id>
