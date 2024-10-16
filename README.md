@@ -24,7 +24,7 @@ This module requires the following to already be in place in AWS:
 
 The `examples/default` folder contains a deployment setup demonstrating the default options and providing place holders for reuse.
 
-While `examples/amazonlinux-internal-nlb-development`  uses public subnets and self-signed certificates for a **non-production environment** but illustrates how to enable all features of the root module.
+The `examples/amazonlinux-internal-nlb-development` folder uses public subnets and self-signed certificates for a **non-production environment** but illustrates how to enable all features of the root module.
 
 ## Usage
 
