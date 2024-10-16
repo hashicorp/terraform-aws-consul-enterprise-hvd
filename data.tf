@@ -41,6 +41,7 @@ data "cloudinit_config" "consul" {
 locals {
   install_vars = {
     consul_agent           = var.consul_agent
+    environment_name    = var.environment_name
     snapshot_agent         = var.snapshot_agent
     redundancy_zones       = var.server_redundancy_zones
     consul_cluster_version = var.consul_cluster_version
