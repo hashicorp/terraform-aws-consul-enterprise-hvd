@@ -76,7 +76,7 @@ ports = {
 
 advertise_addr = "{{GetPrivateIP}}"
 
-retry_join = ["provider=aws tag_key=Environment-Name tag_value=primary-consul"]
+retry_join = ["provider=aws tag_key=Environment-Name tag_value=${environment_name}-consul"]
 
 # TLS config
 tls {
