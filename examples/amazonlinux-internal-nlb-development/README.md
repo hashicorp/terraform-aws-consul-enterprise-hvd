@@ -8,7 +8,7 @@ Data sources are configured to find the default VPC in the current account and r
 
     ```shell
     # enter default example
-    cd examples/default
+    cd ./examples/amazonlinux-internal-nlb-development
     # create the license file
     echo $CONSUL_LICENSE > consul.hclic
     # export AWS creds (you could use a profile too)
@@ -79,7 +79,7 @@ For a production system you should not use some of the options set in this examp
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_consul_servers_development"></a> [consul\_servers\_development](#module\_consul\_servers\_development) | ../.. | n/a |
+| <a name="module_consul_development"></a> [consul\_development](#module\_consul\_development) | ../.. | n/a |
 
 ## Resources
 
