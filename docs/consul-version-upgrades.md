@@ -1,4 +1,4 @@
-# Consul version Upgrades
+# Consul version upgrades
 
 The standard documentation for upgrading Consul can be found <https://developer.hashicorp.com/consul/docs/upgrading>
 
