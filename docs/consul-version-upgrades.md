@@ -1,6 +1,6 @@
 # Consul version upgrades
 
-The standard documentation for upgrading Consul can be found <https://developer.hashicorp.com/consul/docs/upgrading>
+First review the standard documentation for [upgrading Consul](https://developer.hashicorp.com/consul/docs/upgrading).
 
 ## Automated Upgrades
 
