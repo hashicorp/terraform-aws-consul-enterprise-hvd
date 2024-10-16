@@ -2,7 +2,7 @@
 
 First review the standard documentation for [upgrading Consul](https://developer.hashicorp.com/consul/docs/upgrading).
 
-## Automated Upgrades
+## Automated upgrades
 
 This feature requires HashiCorp Cloud Platform (HCP) or self-managed Consul Enterprise. Refer to the enterprise feature matrix for additional information.
 the original documentation is presented <https://developer.hashicorp.com/consul/docs/enterprise/upgrades>
