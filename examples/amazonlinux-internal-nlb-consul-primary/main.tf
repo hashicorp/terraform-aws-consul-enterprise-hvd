@@ -17,7 +17,7 @@ terraform {
 provider "aws" {
   region = var.region
 }
-module "" default
+module "default" {
   source = "../.."
 
   # Instance Configuration

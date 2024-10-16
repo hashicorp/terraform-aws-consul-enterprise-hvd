@@ -3,7 +3,7 @@
 
 
 
-module "consul_servers_development" {
+module "consul_development" {
   source = "../.."
 
   # Instance Configuration

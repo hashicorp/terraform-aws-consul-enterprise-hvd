@@ -21,7 +21,7 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_consul_servers_primary"></a> [consul\_servers\_primary](#module\_consul\_servers\_primary) | ../.. | n/a |
+| <a name="module_default"></a> [default](#module\_default) | ../.. | n/a |
 
 ## Resources
 
