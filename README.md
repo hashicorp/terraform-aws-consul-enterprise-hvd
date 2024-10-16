@@ -28,7 +28,7 @@ While `examples/amazonlinux-internal-nlb-development`  uses public subnets and s
 
 ## Usage
 
-Additional documentation for customization and usage can be found in teh `./docs` folder.
+Additional documentation for customization and usage can be found in the `./docs` folder.
 
 ```bash
 ./docs
