@@ -30,7 +30,7 @@ The `examples/amazonlinux-internal-nlb-development` folder uses public subnets a
 
 Additional documentation for customization and usage can be found in the `./docs` folder.
 
-```bash
+```pre
 ./docs
 ├── consul-version-upgrades.md
 └── deployment-customizations.md
