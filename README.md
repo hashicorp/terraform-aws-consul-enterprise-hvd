@@ -26,6 +26,16 @@ The `examples/default` folder contains a deployment setup demonstrating the defa
 
 While `examples/amazonlinux-internal-nlb-development`  uses public subnets and self-signed certificates for a **non-production environment** but illustrates how to enable all features of the root module.
 
+## Usage
+
+Additional documentation for customization and usage can be found in teh `./docs` folder.
+
+```bash
+./docs
+├── consul-version-upgrades.md
+└── deployment-customizations.md
+```
+
 ## Module support
 
 This open source software is maintained by the HashiCorp Technical Field Organization, independently of our enterprise products. While our Support Engineering team provides dedicated support for our enterprise offerings, this open source software is not included.
