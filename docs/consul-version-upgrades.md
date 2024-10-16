@@ -61,4 +61,6 @@ resource "aws_autoscaling_group" "consul" {
 }
 ```
 
-This means you should where possible and to prevent data loss. follow the standard operating procedure and ensure  backup and recovery process is in place and used accordingly. <https://developer.hashicorp.com/consul/tutorials/operate-consul/backup-and-restore > Utilise the Automated upgrade process, and once the upgrade is successful you can update the `var.consul_install_version` in your deployment and replace the `aws_launch_template` which will then mean any future server failures in the `aws_autoscaling_group.consul` resource will relaunch on the correct version.
+This means you should (where possible and to prevent data loss) follow the standard operating procedure and ensure a backup and recovery process is in place and used accordingly. See the tutorial on [backup and restore](https://developer.hashicorp.com/consul/tutorials/operate-consul/backup-and-restore ).
+
+Use the automated upgrade process. Once the upgrade is successful you can update the `var.consul_install_version` in your deployment and replace the `aws_launch_template` which will then mean any future server failures in the `aws_autoscaling_group.consul` resource will relaunch on the correct version.
