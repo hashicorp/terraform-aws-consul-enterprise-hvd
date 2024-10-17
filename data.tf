@@ -19,6 +19,10 @@ data "cloudinit_config" "consul" {
   }
   part {
     content_type = "x-shellscript"
+    content      = templatefile("${path.module}/templates/01_install_aws_cli.sh.tpl", {})
+  }
+  part {
+    content_type = "x-shellscript"
     content      = templatefile("${path.module}/templates/install_consul.sh.tpl", { consul_version = var.consul_install_version })
   }
   part {
