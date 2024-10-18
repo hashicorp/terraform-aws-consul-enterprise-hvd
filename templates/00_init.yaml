@@ -7,3 +7,6 @@ fs_setup:
     partition: auto
 mounts:
   - [/dev/sdf, /var/lib/consul, auto, defaults, 0, 2]
+packages:
+  - unzip
+  - jq
