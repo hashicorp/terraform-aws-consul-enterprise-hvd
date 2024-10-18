@@ -2,9 +2,6 @@
 export SHELLOPTS
 set -euo pipefail
 
-sudo dnf update
-sudo dnf install -y unzip
-
 GOARCH=$(uname -m)
 if [ "$GOARCH" == "x86_64" ]
 then
