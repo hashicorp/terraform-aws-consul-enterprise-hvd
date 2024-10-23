@@ -21,3 +21,23 @@ To enable Consul Enterprise Redundancy Zones, set the `server_redundancy_zones` 
 
 - **server_redundancy_zones**: Set to `true` to enable Consul Enterprise Redundancy Zones. This requires an even number of server nodes spread across three availability zones.
 - **consul_nodes**: Set to `6` to ensure proper configuration for redundancy zones. This specifies the number of Consul nodes to deploy.
+
+
+### Template customization
+
+The `install_consul_config.sh.tpl` file is exposed as a variable
+
+```hcl
+variable "consul_config_template" {
+  type        = string
+  default     = null
+  nullable    = true
+  description = "(Optional string) name of `*.tpl` file in the `./templates` folder local to the module declaration, to replace the root `install_consul_config.sh.tpl` "
+  validation {
+    condition     = var.consul_config_template == null || can(fileexists("./templates/${var.consul_config_template}"))
+    error_message = "File not found or not readable"
+  }
+}
+```
+
+you can copy the existing template form the module to your root module `./templates/install_consul_config.sh.tpl` folder and provide the files basename i.e `consul_config_template = install_consul_config.sh.tpl` and the file will replace the default server config.

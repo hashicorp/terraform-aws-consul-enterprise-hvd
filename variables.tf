@@ -173,6 +173,16 @@ variable "snapshot_agent" {
   }
   description = "Config object to enable snapshot agent."
 }
+variable "consul_config_template" {
+  type        = string
+  default     = null
+  nullable    = true
+  description = "(Optional string) name of `*.tpl` file in the `./templates` folder local to the module decleration, to replace the root `install_consul_config.sh` "
+  validation {
+    condition     = var.consul_config_template == null || can(fileexists("${path.cwd}/templates/${var.consul_config_template}"))
+    error_message = "File not found or not readable"
+  }
+}
 
 variable "route53_resolver_pool" {
   type = object({
