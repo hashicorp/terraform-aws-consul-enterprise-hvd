@@ -19,11 +19,17 @@ data "cloudinit_config" "consul" {
   }
   part {
     content_type = "x-shellscript"
+    content      = templatefile("${path.module}/templates/01_install_aws_cli.sh.tpl", {})
+  }
+  part {
+    content_type = "x-shellscript"
     content      = templatefile("${path.module}/templates/install_consul.sh.tpl", { consul_version = var.consul_install_version })
   }
   part {
     content_type = "x-shellscript"
-    content      = templatefile("${path.module}/templates/install_consul_config.sh.tpl", local.install_vars)
+    content      = local.consul_config_template
+    #content      = templatefile("${path.module}/templates/install_consul_config.sh.tpl", local.install_vars)
+
   }
   dynamic "part" {
     for_each = var.snapshot_agent.enabled ? ["enabled"] : []
@@ -39,9 +45,11 @@ data "cloudinit_config" "consul" {
 }
 
 locals {
+  consul_config_templatefile = var.consul_config_template != null ? "${path.cwd}/templates/${var.consul_config_template}" : "${path.module}/templates/install_consul_config.sh.tpl"
+  consul_config_template     = templatefile(local.consul_config_templatefile, local.install_vars)
   install_vars = {
     consul_agent           = var.consul_agent
-    environment_name    = var.environment_name
+    environment_name       = var.environment_name
     snapshot_agent         = var.snapshot_agent
     redundancy_zones       = var.server_redundancy_zones
     consul_cluster_version = var.consul_cluster_version

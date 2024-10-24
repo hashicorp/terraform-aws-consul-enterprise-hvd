@@ -1,6 +1,8 @@
 # Consul Enterprise HVD on AWS EC2
 
-Terraform module aligned with HashiCorp Validated Designs (HVD) to deploy Consul Enterprise on Amazon Web Services (AWS) using EC2 instances. It provides options for definining the size of the cluster and options to use redundancy zones.
+Terraform module aligned with HashiCorp Validated Designs (HVD) to deploy Consul Enterprise on Amazon Web Services (AWS) using EC2 instances. It provides options for defining the size of the cluster and options to use redundancy zones.
+
+![Consul on AWS](https://raw.githubusercontent.com/hashicorp/terraform-aws-consul-enterprise-hvd/main/docs/_assets/images/consul_aws_vms.png)
 
 ## Prerequisites
 
@@ -17,32 +19,23 @@ This module requires the following to already be in place in AWS:
 - SSH key name, already registered in AWS, to use for instance access
 - ID of the AWS VPC resources are deployed into
 
+
 ## Examples
 
-The `examples/default` folder contains a deployment setup demonstrating various options. It uses public subnets and self-signed certificates for a **non-production environment** but illustrates how to enable all features of the root module.
+The `examples/amazonlinux-internal-nlb-consul-primary` folder contains the default deployment setup demonstrating the default options and providing place holders for reuse.
 
-## TLS
+The `examples/amazonlinux-internal-nlb-development` folder uses public subnets and self-signed certificates for a **non-production environment** but illustrates how to enable all features of the root module.
 
-Certificates are provided at startup via cloud-init. Follow the example to structure your certificates correctly.
+## Usage
 
-## Adding a Consul license
+Additional documentation for customization and usage can be found in the `./docs` folder.
 
-To see an example of how to automate the addition of your Consul license to SSM, place the license file in the example directory. The Terraform module will handle the rest.
+```pre
+./docs
+├── consul-version-upgrades.md
+└── deployment-customizations.md
+```
 
-## Customizing options with tf.autovars.tfvars
-
-Use the `tf.autovars.tfvars` file to customize various options for your Consul deployment. By modifying this file, you can set specific values for the variables used in the module, such as the number of nodes, redundancy settings, and other configurations. Edit the `tf.autovars.tfvars` file with your desired settings and run your Terraform commands to apply them.
-
-## Redundancy zones
-
-To enable Consul Enterprise Redundancy Zones, set the `server_redundancy_zones` variable to `true`. This feature requires an even number of server nodes spread across 3 or more availability zones. Additionally, set the `consul_nodes` variable to `6` to meet this requirement.
-
-### Configuration options
-
-- **server_redundancy_zones**: Set to `true` to enable Consul Enterprise Redundancy Zones. This requires an even number of server nodes spread across three availability zones.  
-- **consul_nodes**: Set to `6` to ensure proper configuration for redundancy zones. This specifies the number of Consul nodes to deploy.
-
-<!-- BEGIN_TF_DOCS -->
 ## Module support
 
 This open source software is maintained by the HashiCorp Technical Field Organization, independently of our enterprise products. While our Support Engineering team provides dedicated support for our enterprise offerings, this open source software is not included.
@@ -51,6 +44,8 @@ This open source software is maintained by the HashiCorp Technical Field Organiz
 - To report bugs/issues with this open source software, please open them directly against this code repository using the GitHub issues feature.
 
 Please note that there is no official Service Level Agreement (SLA) for support of this software as a HashiCorp customer. This software falls under the definition of Community Software/Versions in your Agreement. We appreciate your understanding and collaboration in improving our open source projects.
+
+<!-- BEGIN_TF_DOCS -->
 
 ## Requirements
 

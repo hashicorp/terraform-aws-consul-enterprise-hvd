@@ -8,7 +8,8 @@ resource "aws_launch_template" "consul" {
   image_id      = var.ami_id
   instance_type = var.instance_type
   key_name      = var.key_name
-  user_data     = data.cloudinit_config.consul.rendered
+  #user_data     = data.cloudinit_config.consul.rendered
+  user_data = local.cloudinit_config_rendered
 
   instance_initiated_shutdown_behavior = "terminate"
 
@@ -97,6 +98,9 @@ resource "aws_autoscaling_group" "consul" {
 }
 
 locals {
+
+  cloudinit_config_rendered = data.cloudinit_config.consul.rendered
+  #cloudinit_config_rendered = var.cloud_init_config_rendered == null ? data.cloudinit_config.consul.rendered : var.cloud_init_config_rendered
   egress_sg_id  = var.permit_all_egress ? aws_security_group.egress[0].id : ""
   template_name = "${var.environment_name}-consul"
   asg_name      = "${local.template_name}-${var.consul_cluster_version}"

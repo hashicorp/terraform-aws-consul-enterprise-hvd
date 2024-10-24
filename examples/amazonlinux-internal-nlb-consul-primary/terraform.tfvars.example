@@ -1,0 +1,80 @@
+#------------------------------------------------------------------------------
+# Common
+#------------------------------------------------------------------------------
+region           = "<us-east-1>"
+environment_name = "<production>"
+tag_owner        = "<email@example.com>"
+
+#------------------------------------------------------------------------------
+# Consul configuration settings
+#------------------------------------------------------------------------------
+autopilot_health_enabled = true
+consul_agent = {
+  agent_cert_arn        = "<arn:aws:ssm:us-east-1:123456789012:parameter/consul_agent_cert>"
+  agent_key_arn         = "<arn:aws:ssm:us-east-1:123456789012:parameter/consul_agent_key>"
+  bootstrap             = true
+  ca_cert_arn           = "<arn:aws:ssm:us-east-1:123456789012:parameter/consul_ca_cert>"
+  consul_log_level      = "INFO"
+  datacenter            = "<dc1>"
+  domain                = "consul"
+  gossip_encryption_key = "<ITyqw6xrOrApx9B6P6k+HdFH8UD9M1UXu8XL6ZzWWJM=>"
+  initial_token         = "<aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee>"
+  license_text_arn      = "<arn:aws:ssm:us-east-1:123456789012:parameter/consul_license_text>"
+  primary_datacenter    = "<dc1>"
+  ui                    = true
+}
+consul_cluster_version = "0.0.1"
+consul_install_version = "1.19.2+ent"
+consul_nodes           = 6
+
+#------------------------------------------------------------------------------
+# Compute
+#------------------------------------------------------------------------------
+ami_id        = "<ami-01234>"
+instance_type = "m5.large"
+key_name      = "<my-key-name>"
+disk_params = {
+  root = {
+    volume_type = "gp3"
+    volume_size = 32
+    iops        = 3000
+  },
+  data = {
+    volume_type = "gp3"
+    volume_size = 100
+    iops        = 3000
+  }
+}
+
+#------------------------------------------------------------------------------
+# Networking
+#------------------------------------------------------------------------------
+vpc_id = "<vpc-1234>"
+instance_subnets = [
+  "<subnet-5678>",
+  "<subnet-9012>",
+  "<subnet-3456>",
+]
+internal_nlb_subnets = [
+  "<subnet-5678>",
+  "<subnet-9012>",
+  "<subnet-3456>",
+]
+permit_all_egress = true
+route53_resolver_pool = {
+  enabled         = false
+  override_domain = null
+}
+server_redundancy_zones = true
+associate_public_ip     = true
+
+#------------------------------------------------------------------------------
+# Snapshots
+#------------------------------------------------------------------------------
+snapshot_agent = {
+  enabled      = true
+  interval     = "60m"
+  retention    = 24
+  s3_bucket_id = "<my-bucket>"
+  token        = "<aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee>"
+}
