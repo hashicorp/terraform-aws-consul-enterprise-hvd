@@ -40,4 +40,4 @@ variable "consul_config_template" {
 }
 ```
 
-you can copy the existing template form the module to your root module `./templates/install_consul_config.sh.tpl` folder and provide the files basename i.e `consul_config_template = install_consul_config.sh.tpl` and the file will replace the default server config.
+you can copy the existing template form the module to your root module `./templates/install_consul_config.sh.tpl` folder and provide the files basename i.e `consul_config_template = "install_consul_config.sh.tpl"` and the file will replace the default server config.
