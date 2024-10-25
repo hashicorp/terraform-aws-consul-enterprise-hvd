@@ -15,7 +15,7 @@ variable "consul_install_version" {
 
 variable "consul_cluster_version" {
   type        = string
-  description = "SemVer version string representing the cluster's deployent iteration. Must always be incremented when deploying updates (e.g. new AMIs, updated launch config)"
+  description = "SemVer version string representing the cluster's deploymentiteration. Must always be incremented when deploying updates (e.g. new AMIs, updated launch config)"
   default     = "0.0.1"
 }
 
