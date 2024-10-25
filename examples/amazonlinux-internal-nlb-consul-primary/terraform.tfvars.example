@@ -62,8 +62,7 @@ internal_nlb_subnets = [
 ]
 permit_all_egress = true
 route53_resolver_pool = {
-  enabled         = false
-  override_domain = null
+  enabled         = true
 }
 server_redundancy_zones = true
 associate_public_ip     = true
