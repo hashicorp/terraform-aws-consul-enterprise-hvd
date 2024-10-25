@@ -21,7 +21,7 @@ module "default" {
   source = "../.."
 
   # Instance Configuration
-  ami_id               = data.aws_ami.amazonlinux.id
+  ami_id               = var.ami_id #data.aws_ami.amazonlinux.id
   instance_type        = var.instance_type
   key_name             = var.key_name
   vpc_id               = var.vpc_id
