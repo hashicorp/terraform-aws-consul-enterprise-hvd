@@ -11,8 +11,7 @@ Review the [Consul operator autopilot](https://developer.hashicorp.com/consul/co
 
 ### Module support
 
-
-The module supports specifying the deployment version.
+The module supports specifying the `consul_install_version` and `consul_cluster_version`.
 
 ```json
 variable "consul_install_version" {
@@ -20,6 +19,13 @@ variable "consul_install_version" {
   description = "Version of Consul to install, eg. '1.19.0+ent'"
   default     = "1.19.2+ent"
 }
+
+variable "consul_cluster_version" {
+  type        = string
+  description = "SemVer version string representing the cluster's deployment iteration. Must always be incremented when deploying updates (e.g. new AMIs, updated launch config)"
+  default     = "0.0.1"
+}
+
 ```
 
 The module includes a variable `autopilot_health_enabled` which defaults to true and supports the validation of new servers upgraded following the above process.
