@@ -24,9 +24,9 @@ module "default" {
   ami_id               = data.aws_ami.amazonlinux.id
   instance_type        = var.instance_type
   key_name             = var.key_name
-  vpc_id               = data.aws_vpc.default.id
-  instance_subnets     = data.aws_subnets.default.ids
-  internal_nlb_subnets = data.aws_subnets.default.ids
+  vpc_id               = var.vpc_id
+  instance_subnets     = var.instance_subnets
+  internal_nlb_subnets = var.internal_nlb_subnets
   associate_public_ip  = var.associate_public_ip
 
   # Cluster Details
