@@ -106,6 +106,7 @@ variable "permit_all_egress" {
 variable "ami_id" {
   type        = string
   description = "AMI to launch ASG instances from."
+  nullable    = true
 }
 
 variable "key_name" {

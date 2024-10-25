@@ -83,6 +83,7 @@ variable "disk_params" {
 variable "vpc_id" {
   type        = string
   description = "ID of the AWS VPC resources are deployed into."
+  nullable    = true
 }
 
 variable "additional_gossip_cidrs" {
