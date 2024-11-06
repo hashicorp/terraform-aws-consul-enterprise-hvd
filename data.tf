@@ -54,10 +54,14 @@ locals {
     redundancy_zones       = var.server_redundancy_zones
     consul_cluster_version = var.consul_cluster_version
     consul_nodes           = var.server_redundancy_zones ? length(toset([for i in data.aws_subnet.instance : i.availability_zone])) : var.consul_nodes
-    license_path           = trimprefix(provider::aws::arn_parse(var.consul_agent.license_text_arn).resource, "parameter")
-    ca_cert_path           = trimprefix(provider::aws::arn_parse(var.consul_agent.ca_cert_arn).resource, "parameter")
-    agent_cert_path        = trimprefix(provider::aws::arn_parse(var.consul_agent.agent_cert_arn).resource, "parameter")
-    agent_key_path         = trimprefix(provider::aws::arn_parse(var.consul_agent.agent_key_arn).resource, "parameter")
+    license_text_arn       = var.consul_agent.license_text_arn
+    ca_cert_arn            = var.consul_agent.ca_cert_arn
+    agent_cert_arn         = var.consul_agent.agent_cert_arn
+    agent_key_arn          = var.consul_agent.agent_key_arn
+    # license_path           = trimprefix(provider::aws::arn_parse(var.consul_agent.license_text_arn).resource, "parameter")
+    # ca_cert_path           = trimprefix(provider::aws::arn_parse(var.consul_agent.ca_cert_arn).resource, "parameter")
+    # agent_cert_path        = trimprefix(provider::aws::arn_parse(var.consul_agent.agent_cert_arn).resource, "parameter")
+    # agent_key_path         = trimprefix(provider::aws::arn_parse(var.consul_agent.agent_key_arn).resource, "parameter")
   }
   verify_vars = {
     autopilot_health_enabled = var.autopilot_health_enabled

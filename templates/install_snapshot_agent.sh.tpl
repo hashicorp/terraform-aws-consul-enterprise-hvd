@@ -8,7 +8,7 @@ while ! curl --fail --insecure --silent -H "X-Consul-Token: ${snapshot_agent.tok
 done
 
 TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
-REGION="$(curl -s http://169.254.169.254/latest/meta-data/placement/region -H "X-aws-ec2-metadata-token: $TOKEN" )"
+AWS_REGION="$(curl -s http://169.254.169.254/latest/meta-data/placement/region -H "X-aws-ec2-metadata-token: $TOKEN" )"
 
 mkdir -p /etc/consul-snapshot.d
 tee /etc/consul-snapshot.d/consul-snapshot.json <<EOF
@@ -27,7 +27,7 @@ tee /etc/consul-snapshot.d/consul-snapshot.json <<EOF
     "backup_destinations": {
       "aws_storage": [{
         "s3_key_prefix": "consul-snapshot",
-        "s3_region": "$REGION",
+        "s3_region": "$AWS_REGION",
         "s3_bucket": "${snapshot_agent.s3_bucket_id}"
       }]
     }
