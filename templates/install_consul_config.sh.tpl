@@ -31,7 +31,8 @@ function retrieve_license_from_awssm {
 }
 log "INFO" "Retrieving CONSUL license file..."
 retrieve_license_from_awssm "${license_text_arn}"
-# aws ssm get-parameter --with-decryption --name ${license_path} --query "Parameter.Value" --output text > /etc/consul.d/consul.hclic
+
+# aws ssm get-parameter --with-decryption --name \$\{license_path} --query "Parameter.Value" --output text > /etc/consul.d/consul.hclic
 
 function retrieve_certs_from_awssm {
   local SECRET_ARN="$1"
@@ -53,11 +54,11 @@ function retrieve_certs_from_awssm {
   fi
 }
 
-# aws ssm get-parameter --with-decryption --name ${ca_cert_path} --query "Parameter.Value" --output text > /etc/consul.d/tls/consul-ca.pem
+# aws ssm get-parameter --with-decryption --name \$\{ca_cert_path} --query "Parameter.Value" --output text > /etc/consul.d/tls/consul-ca.pem
 
-# aws ssm get-parameter --with-decryption --name ${agent_cert_path} --query "Parameter.Value" --output text > /etc/consul.d/tls/consul-cert.pem
+# aws ssm get-parameter --with-decryption --name \$\{agent_cert_path} --query "Parameter.Value" --output text > /etc/consul.d/tls/consul-cert.pem
 
-# aws ssm get-parameter --with-decryption --name ${agent_key_path} --query "Parameter.Value" --output text > /etc/consul.d/tls/consul-key.pem
+# aws ssm get-parameter --with-decryption --name \$\{agent_key_path} --query "Parameter.Value" --output text > /etc/consul.d/tls/consul-key.pem
 log "INFO" "Retrieving CONSUL TLS certificate..."
 retrieve_certs_from_awssm "${agent_cert_arn}" "$CONSUL_TLS_CERTS_DIR/consul-cert.pem"
 log "INFO" "Retrieving CONSUL TLS private key..."
