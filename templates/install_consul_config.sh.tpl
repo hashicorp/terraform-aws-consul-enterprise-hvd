@@ -66,7 +66,7 @@ retrieve_certs_from_awssm "${agent_key_arn}" "$CONSUL_TLS_CERTS_DIR/consul-key.p
 log "INFO" "Retrieving CONSUL TLS CA bundle..."
 retrieve_certs_from_awssm "${ca_cert_arn}" "$CONSUL_TLS_CERTS_DIR/consul-ca.pem"
 
-tee ${CONSUL_CONFIG_DIR}/consul.hcl <<EOF
+tee $CONSUL_CONFIG_DIR/consul.hcl <<EOF
 node_name = "$INSTANCE"
 domain    = "${consul_agent.domain}"
 data_dir  = "/var/lib/consul"
