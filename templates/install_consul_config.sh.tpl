@@ -84,7 +84,7 @@ encrypt_verify_outgoing = true
 leave_on_terminate = true
 
 server       = true
-license_path = "${CONSUL_CONFIG_DIR}/consul.hclic"
+license_path = "$CONSUL_CONFIG_DIR/consul.hclic"
 
 # Configure Redundancy Zones
 autopilot {
