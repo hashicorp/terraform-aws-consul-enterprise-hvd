@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -eu
+LOGFILE="/var/log/consul-cloud-init.log"
 
 TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 600")
 AVAILABILITY_ZONE="$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone -H "X-aws-ec2-metadata-token: $TOKEN" )"
@@ -8,10 +9,18 @@ INSTANCE="$(curl -s http://169.254.169.254/latest/meta-data/instance-id -H "X-aw
 CONSUL_CONFIG_DIR="/etc/consul.d"
 CONSUL_TLS_CERTS_DIR="$CONSUL_CONFIG_DIR/tls"
 CONSUL_LICENSE_PATH="$CONSUL_CONFIG_DIR/consul.hclic"
+
 useradd --system --home $CONSUL_CONFIG_DIR --shell /bin/false consul
 
 mkdir -p $CONSUL_TLS_CERTS_DIR
+function log {
+  local level="$1"
+  local message="$2"
+  local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+  local log_entry="$timestamp [$level] - $message"
 
+  echo "$log_entry" | tee -a "$LOGFILE"
+}
 function retrieve_license_from_awssm {
   local SECRET_ARN="$1"
   local SECRET_REGION=$AWS_REGION
