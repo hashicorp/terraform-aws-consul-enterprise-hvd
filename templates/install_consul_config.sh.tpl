@@ -6,8 +6,8 @@ AVAILABILITY_ZONE="$(curl -s http://169.254.169.254/latest/meta-data/placement/a
 AWS_REGION="$(curl -s http://169.254.169.254/latest/meta-data/placement/region -H "X-aws-ec2-metadata-token: $TOKEN" )"
 INSTANCE="$(curl -s http://169.254.169.254/latest/meta-data/instance-id -H "X-aws-ec2-metadata-token: $TOKEN" )"
 CONSUL_CONFIG_DIR="/etc/consul/d"
-CONSUL_TLS_CERTS_DIR="${CONSUL_CONFIG_DIR}/tls"
-CONSUL_LICENSE_PATH="${CONSUL_CONFIG_DIR}/consul.hclic"
+CONSUL_TLS_CERTS_DIR="$CONSUL_CONFIG_DIR/tls"
+CONSUL_LICENSE_PATH="$CONSUL_CONFIG_DIR/consul.hclic"
 useradd --system --home $CONSUL_CONFIG_DIR --shell /bin/false consul
 
 mkdir -p $CONSUL_TLS_CERTS_DIR
