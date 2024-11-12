@@ -1,24 +1,81 @@
 #!/usr/bin/env bash
 set -eu
+LOGFILE="/var/log/consul-cloud-init.log"
 
 TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 600")
 AVAILABILITY_ZONE="$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone -H "X-aws-ec2-metadata-token: $TOKEN" )"
-REGION="$(curl -s http://169.254.169.254/latest/meta-data/placement/region -H "X-aws-ec2-metadata-token: $TOKEN" )"
+AWS_REGION="$(curl -s http://169.254.169.254/latest/meta-data/placement/region -H "X-aws-ec2-metadata-token: $TOKEN" )"
 INSTANCE="$(curl -s http://169.254.169.254/latest/meta-data/instance-id -H "X-aws-ec2-metadata-token: $TOKEN" )"
+CONSUL_CONFIG_DIR="/etc/consul.d"
+CONSUL_TLS_CERTS_DIR="$CONSUL_CONFIG_DIR/tls"
+CONSUL_LICENSE_PATH="$CONSUL_CONFIG_DIR/consul.hclic"
 
-useradd --system --home /etc/consul.d --shell /bin/false consul
+useradd --system --home $CONSUL_CONFIG_DIR --shell /bin/false consul
 
-mkdir -p /etc/consul.d/tls
+mkdir -p $CONSUL_TLS_CERTS_DIR
+function log {
+  local level="$1"
+  local message="$2"
+  local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+  local log_entry="$timestamp [$level] - $message"
 
-aws ssm get-parameter --with-decryption --name ${license_path} --query "Parameter.Value" --output text > /etc/consul.d/consul.hclic
+  echo "$log_entry" | tee -a "$LOGFILE"
+}
+function retrieve_license_from_awssm {
+  local SECRET_ARN="$1"
+  local SECRET_REGION=$AWS_REGION
 
-aws ssm get-parameter --with-decryption --name ${ca_cert_path} --query "Parameter.Value" --output text > /etc/consul.d/tls/consul-ca.pem
+  if [[ -z "$SECRET_ARN" ]]; then
+    log "ERROR" "Secret ARN cannot be empty. Exiting."
+    exit_script 4
+  elif [[ "$SECRET_ARN" == arn:aws:secretsmanager:* ]]; then
+    log "INFO" "Retrieving value of secret '$SECRET_ARN' from AWS Secrets Manager."
+    CONSUL_LICENSE=$(aws secretsmanager get-secret-value --region $SECRET_REGION --secret-id $SECRET_ARN --query SecretString --output text)
+    echo "$CONSUL_LICENSE" > $CONSUL_LICENSE_PATH
+  else
+    log "WARNING" "Did not detect AWS Secrets Manager secret ARN. Setting value of secret to what was passed in."
+    CONSUL_LICENSE="$SECRET_ARN"
+    echo "$CONSUL_LICENSE" > $CONSUL_LICENSE_PATH
+  fi
+}
+log "INFO" "Retrieving CONSUL license file..."
+retrieve_license_from_awssm "${license_text_arn}"
 
-aws ssm get-parameter --with-decryption --name ${agent_cert_path} --query "Parameter.Value" --output text > /etc/consul.d/tls/consul-cert.pem
+# aws ssm get-parameter --with-decryption --name \$\{license_path} --query "Parameter.Value" --output text > /etc/consul.d/consul.hclic
 
-aws ssm get-parameter --with-decryption --name ${agent_key_path} --query "Parameter.Value" --output text > /etc/consul.d/tls/consul-key.pem
+function retrieve_certs_from_awssm {
+  local SECRET_ARN="$1"
+  local DESTINATION_PATH="$2"
+  local SECRET_REGION=$AWS_REGION
+  local CERT_DATA
 
-tee /etc/consul.d/consul.hcl <<EOF
+  if [[ -z "$SECRET_ARN" ]]; then
+    log "ERROR" "Secret ARN cannot be empty. Exiting."
+    exit_script 5
+  elif [[ "$SECRET_ARN" == arn:aws:secretsmanager:* ]]; then
+    log "INFO" "Retrieving value of secret '$SECRET_ARN' from AWS Secrets Manager."
+    CERT_DATA=$(aws secretsmanager get-secret-value --region $SECRET_REGION --secret-id $SECRET_ARN --query SecretString --output text)
+    echo "$CERT_DATA" | base64 -d > $DESTINATION_PATH
+  else
+    log "WARNING" "Did not detect AWS Secrets Manager secret ARN. Setting value of secret to what was passed in."
+    CERT_DATA="$SECRET_ARN"
+    echo "$CERT_DATA" | base64 -d > $DESTINATION_PATH
+  fi
+}
+
+# aws ssm get-parameter --with-decryption --name \$\{ca_cert_path} --query "Parameter.Value" --output text > /etc/consul.d/tls/consul-ca.pem
+
+# aws ssm get-parameter --with-decryption --name \$\{agent_cert_path} --query "Parameter.Value" --output text > /etc/consul.d/tls/consul-cert.pem
+
+# aws ssm get-parameter --with-decryption --name \$\{agent_key_path} --query "Parameter.Value" --output text > /etc/consul.d/tls/consul-key.pem
+log "INFO" "Retrieving CONSUL TLS certificate..."
+retrieve_certs_from_awssm "${agent_cert_arn}" "$CONSUL_TLS_CERTS_DIR/consul-cert.pem"
+log "INFO" "Retrieving CONSUL TLS private key..."
+retrieve_certs_from_awssm "${agent_key_arn}" "$CONSUL_TLS_CERTS_DIR/consul-key.pem"
+log "INFO" "Retrieving CONSUL TLS CA bundle..."
+retrieve_certs_from_awssm "${ca_cert_arn}" "$CONSUL_TLS_CERTS_DIR/consul-ca.pem"
+
+tee $CONSUL_CONFIG_DIR/consul.hcl <<EOF
 node_name = "$INSTANCE"
 domain    = "${consul_agent.domain}"
 data_dir  = "/var/lib/consul"
@@ -36,7 +93,7 @@ encrypt_verify_outgoing = true
 leave_on_terminate = true
 
 server       = true
-license_path = "/etc/consul.d/consul.hclic"
+license_path = "$CONSUL_CONFIG_DIR/consul.hclic"
 
 # Configure Redundancy Zones
 autopilot {
@@ -145,6 +202,6 @@ LimitNOFILE=65536
 WantedBy=multi-user.target
 EOF
 
-chown -R consul:consul /etc/consul.d
+chown -R consul:consul $CONSUL_CONFIG_DIR
 chown -R consul:consul /var/lib/consul
 systemctl daemon-reload && systemctl enable --now consul.service
