@@ -45,13 +45,10 @@ module "consul_development" {
     initial_token         = var.initial_token
     primary_datacenter    = "dc1"
     license_text_arn      = aws_secretsmanager_secret.consul_license_text.arn
-    consul_ca_cert        = aws_secretsmanager_secret.consul_ca_cert.arn
+    # consul_ca_cert        = aws_secretsmanager_secret.consul_ca_cert.arn
+    ca_cert_arn           = aws_secretsmanager_secret.consul_ca_cert.arn
     agent_cert_arn        = aws_secretsmanager_secret.consul_agent_cert.arn
     agent_key_arn         = aws_secretsmanager_secret.consul_agent_key.arn
-    # license_text_arn      = aws_ssm_parameter.consul_license_text.arn
-    # ca_cert_arn           = aws_ssm_parameter.consul_ca_cert.arn
-    # agent_cert_arn        = aws_ssm_parameter.consul_agent_cert.arn
-    # agent_key_arn         = aws_ssm_parameter.consul_agent_key.arn
     ui               = true
     consul_log_level = "INFO"
   }
