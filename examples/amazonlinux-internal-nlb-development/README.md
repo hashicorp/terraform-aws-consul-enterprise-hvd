@@ -9,8 +9,9 @@ Data sources are configured to find the default VPC in the current account and r
 ```shell
 # enter default example
 cd ./examples/amazonlinux-internal-nlb-development
-# create the license file
-echo $CONSUL_LICENSE > consul.hclic
+# create the license file and save it in a files directory
+mkdir ./files
+echo $CONSUL_LICENSE > ./files/consul.hclic
 # export AWS creds (you could use a profile too)
 export AWS_ACCESS_KEY_ID=ASIABASE32ENCODEDNU5
 export AWS_SECRET_ACCESS_KEY=BigLongbase64encodedtextthatissecretOEcJ
@@ -53,7 +54,7 @@ query_prefix "" {
 EOF
 consul acl policy create -name 'acl-policy-dns' -description 'Policy for DNS endpoints' -rules @./acl-policy-dns.hcl
 consul acl token create -description 'DNS - Default token' -policy-name acl-policy-dns --format json | tee ./acl-token-dns.json
-consul acl set-agent-token dns token-from-the-secret-listed-above
+consul acl set-agent-token dns <token-from-the-secret-listed-above> 
 ```
 
 ## Notes
