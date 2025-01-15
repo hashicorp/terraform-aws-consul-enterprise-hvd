@@ -59,6 +59,7 @@ data "aws_iam_policy_document" "consul_secrets" {
     effect = "Allow"
     actions = [
       "ssm:GetParameter",
+      "secretsmanager:GetSecretValue"
     ]
     resources = [
       var.consul_agent.license_text_arn,
