@@ -10,16 +10,16 @@ tag_owner        = "<email@example.com>"
 #------------------------------------------------------------------------------
 autopilot_health_enabled = true
 consul_agent = {
-  agent_cert_arn        = "<arn:aws:ssm:us-east-1:123456789012:parameter/consul_agent_cert>"
-  agent_key_arn         = "<arn:aws:ssm:us-east-1:123456789012:parameter/consul_agent_key>"
+  agent_cert_arn        = "arn:aws:secretsmanager:us-east-1:123456789012:secret:consul_agent_cert>"
+  agent_key_arn         = "arn:aws:secretsmanager:us-east-1:123456789012:secret:consul_agent_key>"
   bootstrap             = true
-  ca_cert_arn           = "<arn:aws:ssm:us-east-1:123456789012:parameter/consul_ca_cert>"
+  ca_cert_arn           = "arn:aws:secretsmanager:us-east-1:123456789012:secret:consul_ca_cert>"
   consul_log_level      = "INFO"
   datacenter            = "<dc1>"
   domain                = "consul"
   gossip_encryption_key = "<ITyqw6xrOrApx9B6P6k+HdFH8UD9M1UXu8XL6ZzWWJM=>"
   initial_token         = "<aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee>"
-  license_text_arn      = "<arn:aws:ssm:us-east-1:123456789012:parameter/consul_license_text>"
+  license_text_arn      = "arn:aws:secretsmanager:us-east-1:123456789012:secret:consul_license_text>"
   primary_datacenter    = "<dc1>"
   ui                    = true
 }
