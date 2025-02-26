@@ -39,7 +39,7 @@ resource "aws_secretsmanager_secret_version" "consul_ca_cert" {
 #   # arn
 # }
 resource "aws_secretsmanager_secret" "consul_agent_cert" {
-  name        = "consul-agent-cert"
+  name        = "consul_agent_cert"
   description = "consul_agent_cert"
   # This will allow to do an immediate destroy of the secret when doing a Terraform destroy
   recovery_window_in_days = 0
