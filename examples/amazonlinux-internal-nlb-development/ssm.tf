@@ -7,7 +7,8 @@ locals {
 resource "aws_secretsmanager_secret" "consul_license_text" {
   name        = "consul_license_text"
   description = "consul_license_text"
-
+  # This will allow to do an immediate destroy of the secret when doing a Terraform destroy
+  recovery_window_in_days = 0
 }
 
 resource "aws_secretsmanager_secret_version" "consul_license_text" {
