@@ -9,8 +9,9 @@ Data sources are configured to find the default VPC in the current account and r
 ```shell
 # enter default example
 cd ./examples/amazonlinux-internal-nlb-development
-# create the license file
-echo $CONSUL_LICENSE > consul.hclic
+# create the license file and save it in a files directory
+mkdir ./files
+echo $CONSUL_LICENSE > ./files/consul.hclic
 # export AWS creds (you could use a profile too)
 export AWS_ACCESS_KEY_ID=ASIABASE32ENCODEDNU5
 export AWS_SECRET_ACCESS_KEY=BigLongbase64encodedtextthatissecretOEcJ
@@ -53,7 +54,7 @@ query_prefix "" {
 EOF
 consul acl policy create -name 'acl-policy-dns' -description 'Policy for DNS endpoints' -rules @./acl-policy-dns.hcl
 consul acl token create -description 'DNS - Default token' -policy-name acl-policy-dns --format json | tee ./acl-token-dns.json
-consul acl set-agent-token dns token-from-the-secret-listed-above
+consul acl set-agent-token dns <token-from-the-secret-listed-above> 
 ```
 
 ## Notes
@@ -64,6 +65,8 @@ For a production system you should not use some of the options set in this examp
 - Don't generate TLS certificates in Terraform
 
 <!-- BEGIN_TF_DOCS -->
+
+
 ## Providers
 
 | Name | Version |
@@ -86,10 +89,14 @@ For a production system you should not use some of the options set in this examp
 | [aws_s3_bucket.snapshots](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_public_access_block.deny](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.snapshots](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
-| [aws_ssm_parameter.consul_agent_cert](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
-| [aws_ssm_parameter.consul_agent_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
-| [aws_ssm_parameter.consul_ca_cert](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
-| [aws_ssm_parameter.consul_license_text](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_secretsmanager_secret.consul_agent_cert](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
+| [aws_secretsmanager_secret.consul_agent_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
+| [aws_secretsmanager_secret.consul_ca_cert](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
+| [aws_secretsmanager_secret.consul_license_text](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
+| [aws_secretsmanager_secret_version.consul_agent_cert](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource |
+| [aws_secretsmanager_secret_version.consul_agent_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource |
+| [aws_secretsmanager_secret_version.consul_ca_cert](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource |
+| [aws_secretsmanager_secret_version.consul_license_text](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource |
 | [local_sensitive_file.consul_ssh](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/sensitive_file) | resource |
 | [tls_cert_request.server](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/cert_request) | resource |
 | [tls_locally_signed_cert.server](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/locally_signed_cert) | resource |
