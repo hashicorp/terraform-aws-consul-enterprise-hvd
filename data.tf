@@ -23,29 +23,29 @@ data "cloudinit_config" "consul" {
   }
   part {
     content_type = "x-shellscript"
-    content      = templatefile("${path.module}/templates/install_consul.sh.tpl", { consul_version = var.consul_install_version })
+    content      = templatefile("${path.module}/templates/02_install_consul.sh.tpl", { consul_version = var.consul_install_version })
   }
   part {
     content_type = "x-shellscript"
     content      = local.consul_config_template
-    #content      = templatefile("${path.module}/templates/install_consul_config.sh.tpl", local.install_vars)
+    #content      = templatefile("${path.module}/templates/03_install_consul_config.sh.tpl", local.install_vars)
 
   }
   dynamic "part" {
     for_each = var.snapshot_agent.enabled ? ["enabled"] : []
     content {
       content_type = "x-shellscript"
-      content      = templatefile("${path.module}/templates/install_snapshot_agent.sh.tpl", local.install_vars)
+      content      = templatefile("${path.module}/templates/04_install_snapshot_agent.sh.tpl", local.install_vars)
     }
   }
   part {
     content_type = "text/jinja2"
-    content      = templatefile("${path.module}/templates/verify_cluster_state.sh.tpl", local.verify_vars)
+    content      = templatefile("${path.module}/templates/05_verify_cluster_state.sh.tpl", local.verify_vars)
   }
 }
 
 locals {
-  consul_config_templatefile = var.consul_config_template != null ? "${path.cwd}/templates/${var.consul_config_template}" : "${path.module}/templates/install_consul_config.sh.tpl"
+  consul_config_templatefile = var.consul_config_template != null ? "${path.cwd}/templates/${var.consul_config_template}" : "${path.module}/templates/03_install_consul_config.sh.tpl"
   consul_config_template     = templatefile(local.consul_config_templatefile, local.install_vars)
   install_vars = {
     consul_agent           = var.consul_agent
