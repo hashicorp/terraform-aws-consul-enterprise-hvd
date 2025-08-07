@@ -9,6 +9,10 @@ CONSUL_BIN_DIR="/usr/bin/"
 CONSUL_DIR_LICENSE="/opt/consul"
 CONSUL_USER="consul"
 CONSUL_GROUP="consul"
+CONSUL_CONFIG_DIR="/etc/consul.d"
+
+useradd --system --home $CONSUL_CONFIG_DIR --shell /bin/false $CONSUL_USER
+
 
 LOGFILE="/var/log/consul-cloud-init.log"
 
@@ -20,17 +24,6 @@ function log {
 
   echo "$log_entry" | tee -a "$LOGFILE"
 }
-
-# GOARCH=$(uname -m)
-# if [ "$GOARCH" == "x86_64" ]
-# then
-#   DLARCH="amd64"
-# elif [ "$GOARCH" == "aarch64" ]
-# then
-#   DLARCH="arm64"
-# else
-#   DLARCH=$GOARCH
-# fi
 
 function detect_architecture {
   local ARCHITECTURE=""
