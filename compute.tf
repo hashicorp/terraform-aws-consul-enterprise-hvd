@@ -5,7 +5,7 @@ resource "aws_launch_template" "consul" {
   name                   = local.template_name
   update_default_version = true
 
-  image_id      = var.ami_id
+  image_id      = coalesce(local.ami_id_list...)
   instance_type = var.instance_type
   key_name      = var.key_name
   #user_data     = data.cloudinit_config.consul.rendered
