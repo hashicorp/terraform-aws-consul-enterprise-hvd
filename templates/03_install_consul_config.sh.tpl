@@ -9,7 +9,7 @@ INSTANCE="$(curl -s http://169.254.169.254/latest/meta-data/instance-id -H "X-aw
 CONSUL_CONFIG_DIR="/etc/consul.d"
 CONSUL_TLS_CERTS_DIR="$CONSUL_CONFIG_DIR/tls"
 CONSUL_LICENSE_PATH="$CONSUL_CONFIG_DIR/consul.hclic"
-
+CONSUL_DATA_DIR=/opt/consul
 useradd --system --home $CONSUL_CONFIG_DIR --shell /bin/false consul
 
 mkdir -p $CONSUL_TLS_CERTS_DIR
@@ -75,10 +75,12 @@ retrieve_certs_from_awssm "${agent_key_arn}" "$CONSUL_TLS_CERTS_DIR/consul-key.p
 log "INFO" "Retrieving CONSUL TLS CA bundle..."
 retrieve_certs_from_awssm "${ca_cert_arn}" "$CONSUL_TLS_CERTS_DIR/consul-ca.pem"
 
+log "INFO" "Creating Consul configuration file at $CONSUL_CONFIG_DIR/consul.hcl"
+
 tee $CONSUL_CONFIG_DIR/consul.hcl <<EOF
 node_name = "$INSTANCE"
 domain    = "${consul_agent.domain}"
-data_dir  = "/var/lib/consul"
+data_dir  = $CONSUL_DATA_DIR
 log_level = "${consul_agent.consul_log_level}"
 
 datacenter         = "${consul_agent.datacenter}"
@@ -201,7 +203,9 @@ LimitNOFILE=65536
 [Install]
 WantedBy=multi-user.target
 EOF
-
+log "INFO" "Created Consul service file at /lib/systemd/system/consul.service"
+log "INFO" "Setting permissions for Consul configuration directory and files..."
 chown -R consul:consul $CONSUL_CONFIG_DIR
-chown -R consul:consul /var/lib/consul
+chown -R consul:consul $CONSUL_DATA_DIR
+log "INFO" "Starting Consul service..."
 systemctl daemon-reload && systemctl enable --now consul.service

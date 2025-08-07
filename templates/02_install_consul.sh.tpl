@@ -5,7 +5,7 @@ set -euo pipefail
 PRODUCT="consul"
 CONSUL_VERSION="${consul_version}"
 VERSION=$CONSUL_VERSION
-CONSUL_DIR_BIN="/usr/local/bin/"
+CONSUL_DIR_BIN="/usr/bin/"
 CONSUL_DIR_LICENSE="/opt/consul"
 CONSUL_USER="consul"
 CONSUL_GROUP="consul"
@@ -96,17 +96,17 @@ function checksum_verify {
 
 }
 
-# install_boundary_binary downloads the Boundary binary and puts it in dedicated bin directory
+# install_consul_binary downloads the $${PRODUCT} binary and puts it in dedicated bin directory
 function install_consul_binary {
   local OS_ARCH="$1"
 
-  log "INFO" "Installing $${PRODUCT} binary to: $BOUNDARY_DIR_BIN..."
+  log "INFO" "Installing $${PRODUCT} binary to: $CONSUL_DIR_BIN..."
 
-	sudo unzip "$${PRODUCT}"_"$${CONSUL_VERSION}"_"$${OS_ARCH}".zip  boundary -d $CONSUL_DIR_BIN
-	sudo unzip "$${PRODUCT}"_"$${CONSUL_VERSION}"_"$${OS_ARCH}".zip -x boundary -d $CONSUL_DIR_LICENSE
+	sudo unzip "$${PRODUCT}"_"$${CONSUL_VERSION}"_"$${OS_ARCH}".zip  consul -d $CONSUL_DIR_BIN
+	sudo unzip "$${PRODUCT}"_"$${CONSUL_VERSION}"_"$${OS_ARCH}".zip -x consul -d $CONSUL_DIR_LICENSE
 	sudo rm -f "$${PRODUCT}"_"$${CONSUL_VERSION}"_"$${OS_ARCH}".zip
 
-	# Set the permissions for the Boundary binary
+	# Set the permissions for the $S{PRODUCT} binary
 	sudo chmod 0755 $CONSUL_DIR_BIN/consul
 	sudo chown $CONSUL_USER:$CONSUL_GROUP $CONSUL_DIR_BIN/consul
 

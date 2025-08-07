@@ -22,7 +22,7 @@ module "default" {
 
   # Instance Configuration
   #ami_id = var.ami_id
-  ami_id                = data.aws_ami.amazonlinux.id
+  ami_id                = var.ec2_ami_id
   instance_type         = var.instance_type
   key_name              = var.key_name
   vpc_id                = var.vpc_id
