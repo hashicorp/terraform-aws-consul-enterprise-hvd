@@ -5,7 +5,7 @@ set -euo pipefail
 PRODUCT="consul"
 CONSUL_VERSION="${consul_version}"
 VERSION=$CONSUL_VERSION
-CONSUL_DIR_BIN="/usr/bin/"
+CONSUL_BIN_DIR="/usr/bin/"
 CONSUL_DIR_LICENSE="/opt/consul"
 CONSUL_USER="consul"
 CONSUL_GROUP="consul"
@@ -100,20 +100,20 @@ function checksum_verify {
 function install_consul_binary {
   local OS_ARCH="$1"
 
-  log "INFO" "Installing $${PRODUCT} binary to: $CONSUL_DIR_BIN..."
+  log "INFO" "Installing $${PRODUCT} binary to: $CONSUL_BIN_DIR..."
 
-	sudo unzip "$${PRODUCT}"_"$${CONSUL_VERSION}"_"$${OS_ARCH}".zip  consul -d $CONSUL_DIR_BIN
+	sudo unzip "$${PRODUCT}"_"$${CONSUL_VERSION}"_"$${OS_ARCH}".zip  consul -d $CONSUL_BIN_DIR
 	sudo unzip "$${PRODUCT}"_"$${CONSUL_VERSION}"_"$${OS_ARCH}".zip -x consul -d $CONSUL_DIR_LICENSE
 	sudo rm -f "$${PRODUCT}"_"$${CONSUL_VERSION}"_"$${OS_ARCH}".zip
 
 	# Set the permissions for the $S{PRODUCT} binary
-	sudo chmod 0755 $CONSUL_DIR_BIN/consul
-	sudo chown $CONSUL_USER:$CONSUL_GROUP $CONSUL_DIR_BIN/consul
+	sudo chmod 0755 $CONSUL_BIN_DIR/consul
+	sudo chown $CONSUL_USER:$CONSUL_GROUP $CONSUL_BIN_DIR/consul
 
 	# Create a symlink to the $${PRODUCT} binary in /usr/local/bin
-	sudo ln -sf $CONSUL_DIR_BIN/consul /usr/local/bin/consul
+	sudo ln -sf $CONSUL_BIN_DIR/consul /usr/local/bin/consul
 
-	log "INFO" "$${PRODUCT} binary installed successfully at $CONSUL_DIR_BIN/consul"
+	log "INFO" "$${PRODUCT} binary installed successfully at $CONSUL_BIN_DIR/consul"
 }
 
 OS_ARCH=$(detect_architecture)

@@ -9,7 +9,9 @@ INSTANCE="$(curl -s http://169.254.169.254/latest/meta-data/instance-id -H "X-aw
 CONSUL_CONFIG_DIR="/etc/consul.d"
 CONSUL_TLS_CERTS_DIR="$CONSUL_CONFIG_DIR/tls"
 CONSUL_LICENSE_PATH="$CONSUL_CONFIG_DIR/consul.hclic"
-CONSUL_DATA_DIR=/opt/consul
+CONSUL_DATA_DIR="/opt/consul"
+SYSTEM_DIR="/etc/systemd/system"
+CONSUL_BIN_DIR="/usr/local/bin"
 useradd --system --home $CONSUL_CONFIG_DIR --shell /bin/false consul
 
 mkdir -p $CONSUL_TLS_CERTS_DIR
@@ -179,21 +181,21 @@ ui_config {
   enabled = ${consul_agent.ui}
 }
 EOF
-
-tee /lib/systemd/system/consul.service <<EOF
+log "INFO" "Created Consul configuration file at '$SYSTEM_DIR/consul.service'."
+tee $SYSTEM_DIR/consul.service <<EOF
 [Unit]
 Description="HashiCorp Consul - A service mesh solution"
 Documentation=https://www.consul.io/
 Requires=network-online.target
 After=network-online.target
-ConditionFileNotEmpty=/etc/consul.d/consul.hcl
+ConditionFileNotEmpty=$CONSUL_CONFIG_DIR/consul.hcl
 
 [Service]
 Type=notify
-EnvironmentFile=-/etc/consul.d/consul.env
+EnvironmentFile=$CONSUL_CONFIG_DIR/consul.env
 User=consul
 Group=consul
-ExecStart=/usr/local/bin/consul agent -config-dir=/etc/consul.d/
+ExecStart=$CONSUL_BIN_DIR/consul agent -config-dir=/etc/consul.d/
 ExecReload=/bin/kill --signal HUP \$MAINPID
 KillMode=process
 KillSignal=SIGTERM
@@ -203,7 +205,7 @@ LimitNOFILE=65536
 [Install]
 WantedBy=multi-user.target
 EOF
-log "INFO" "Created Consul service file at /lib/systemd/system/consul.service"
+log "INFO" "Created Consul service file at '$SYSTEM_DIR/consul.service'."
 log "INFO" "Setting permissions for Consul configuration directory and files..."
 chown -R consul:consul $CONSUL_CONFIG_DIR
 chown -R consul:consul $CONSUL_DATA_DIR
