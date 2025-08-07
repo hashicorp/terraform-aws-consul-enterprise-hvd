@@ -27,9 +27,7 @@ data "cloudinit_config" "consul" {
   }
   part {
     content_type = "x-shellscript"
-    content      = local.consul_config_template
-    #content      = templatefile("${path.module}/templates/03_install_consul_config.sh.tpl", local.install_vars)
-
+    content      = local.consul_config_template # /templates/03_install_consul_config.sh.tpl
   }
   dynamic "part" {
     for_each = var.snapshot_agent.enabled ? ["enabled"] : []
