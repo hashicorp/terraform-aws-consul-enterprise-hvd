@@ -83,7 +83,7 @@ log "INFO" "Creating Consul configuration file at $CONSUL_CONFIG_DIR/consul.hcl"
 tee $CONSUL_CONFIG_DIR/consul.hcl <<EOF
 node_name = "$INSTANCE"
 domain    = "${consul_agent.domain}"
-data_dir  = $CONSUL_DATA_DIR
+data_dir  = "$${CONSUL_DATA_DIR}"
 log_level = "${consul_agent.consul_log_level}"
 
 datacenter         = "${consul_agent.datacenter}"
