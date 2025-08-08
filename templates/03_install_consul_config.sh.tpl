@@ -12,7 +12,8 @@ CONSUL_LICENSE_PATH="$CONSUL_CONFIG_DIR/consul.hclic"
 CONSUL_DATA_DIR="/opt/consul"
 SYSTEM_DIR="/etc/systemd/system"
 CONSUL_BIN_DIR="/usr/local/bin"
-useradd --system --home $CONSUL_CONFIG_DIR --shell /bin/false consul
+
+# useradd --system --home $CONSUL_CONFIG_DIR --shell /bin/false consul
 
 mkdir -p $CONSUL_TLS_CERTS_DIR
 function log {
