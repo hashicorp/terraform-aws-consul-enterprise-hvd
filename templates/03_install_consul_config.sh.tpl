@@ -182,6 +182,7 @@ ui_config {
   enabled = ${consul_agent.ui}
 }
 EOF
+
 log "INFO" "Created Consul configuration file at '$SYSTEM_DIR/consul.service'."
 tee $SYSTEM_DIR/consul.service <<EOF
 [Unit]
@@ -206,9 +207,16 @@ LimitNOFILE=65536
 [Install]
 WantedBy=multi-user.target
 EOF
+
+tee $CONSUL_CONFIG_DIR/consul.env <<EOF
+
+EOF
+
 log "INFO" "Created Consul service file at '$SYSTEM_DIR/consul.service'."
+
 log "INFO" "Setting permissions for Consul configuration directory and files..."
 chown -R consul:consul $CONSUL_CONFIG_DIR
 chown -R consul:consul $CONSUL_DATA_DIR
+
 log "INFO" "Starting Consul service..."
 systemctl daemon-reload && systemctl enable --now consul.service
