@@ -103,7 +103,7 @@ variable "permit_all_egress" {
   description = "Whether broad (0.0.0.0/0) egress should be permitted on cluster nodes. If disabled, additional rules must be added to permit HTTP(S) and other necessary network access."
 }
 
-variable "ami_id" {
+variable "ec2_ami_id" {
   type        = string
   description = "AMI to launch ASG instances from."
 }

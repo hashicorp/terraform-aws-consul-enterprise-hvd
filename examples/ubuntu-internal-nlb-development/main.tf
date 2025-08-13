@@ -7,7 +7,7 @@ module "consul_development" {
   source = "../.."
 
   # Instance Configuration
-  ami_id               = var.ec2_ami_id
+  ec2_ami_id           = var.ec2_ami_id
   instance_type        = "m5.large"
   key_name             = aws_key_pair.server_ssh.id
   vpc_id               = data.aws_vpc.default.id

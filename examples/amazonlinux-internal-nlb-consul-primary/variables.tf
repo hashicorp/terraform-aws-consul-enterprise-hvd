@@ -128,10 +128,7 @@ variable "asg_extra_tags" {
   default     = []
   description = "Additional tags to apply to the Consul auto scaling group. See the Terraform Registry for syntax."
 }
-# variable "ami_id" {
-#   type        = string
-#   description = "AMI to launch ASG instances from."
-# }
+
 
 variable "ec2_os_distro" {
   type        = string
