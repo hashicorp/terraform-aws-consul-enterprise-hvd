@@ -55,8 +55,12 @@ function install_awscli {
       if [[ "$OS_DISTRO" == "ubuntu" || "$OS_DISTRO" == "debian" ]]; then
         apt-get update -y
         apt-get install unzip -y
-      elif [[ "$OS_DISTRO" == "centos" || "$OS_DISTRO" == "rhel" || "$OS_DISTRO" == "al2023" ]]; then
+      elif [[ "$OS_DISTRO" == "centos" || "$OS_DISTRO" == "rhel" ]]; then
         yum install unzip -y
+      elif [[ "$OS_DISTRO" == "al2023" ]]; then
+        dnf install unzip -y
+        log "INFO" "Enabling gnupg2-full for Amazon Linux 2023."
+        dnf swap gnupg2-minimal gnupg2-full -y
       else
         log "ERROR" "Unable to install required 'unzip' utility. Exiting."
         exit_script 2
