@@ -24,6 +24,17 @@ function log {
 
   echo "$log_entry" | tee -a "$LOGFILE"
 }
+
+function exit_script {
+  if [[ "$1" == 0 ]]; then
+    log "INFO" "nomad_custom_data script finished successfully!"
+  else
+    log "ERROR" "nomad_custom_data script finished with error code $1."
+  fi
+
+  exit "$1"
+}
+
 function retrieve_license_from_awssm {
   local SECRET_ARN="$1"
   local SECRET_REGION=$AWS_REGION
@@ -41,8 +52,7 @@ function retrieve_license_from_awssm {
     echo "$CONSUL_LICENSE" > $CONSUL_LICENSE_PATH
   fi
 }
-log "INFO" "Retrieving CONSUL license file..."
-retrieve_license_from_awssm "${license_text_arn}"
+
 
 # aws ssm get-parameter --with-decryption --name \$\{license_path} --query "Parameter.Value" --output text > /etc/consul.d/consul.hclic
 
@@ -67,16 +77,9 @@ function retrieve_certs_from_awssm {
 }
 
 # aws ssm get-parameter --with-decryption --name \$\{ca_cert_path} --query "Parameter.Value" --output text > /etc/consul.d/tls/consul-ca.pem
-
 # aws ssm get-parameter --with-decryption --name \$\{agent_cert_path} --query "Parameter.Value" --output text > /etc/consul.d/tls/consul-cert.pem
-
 # aws ssm get-parameter --with-decryption --name \$\{agent_key_path} --query "Parameter.Value" --output text > /etc/consul.d/tls/consul-key.pem
-log "INFO" "Retrieving CONSUL TLS certificate..."
-retrieve_certs_from_awssm "${agent_cert_arn}" "$CONSUL_TLS_CERTS_DIR/consul-cert.pem"
-log "INFO" "Retrieving CONSUL TLS private key..."
-retrieve_certs_from_awssm "${agent_key_arn}" "$CONSUL_TLS_CERTS_DIR/consul-key.pem"
-log "INFO" "Retrieving CONSUL TLS CA bundle..."
-retrieve_certs_from_awssm "${ca_cert_arn}" "$CONSUL_TLS_CERTS_DIR/consul-ca.pem"
+
 
 log "INFO" "Creating Consul configuration file at $CONSUL_CONFIG_DIR/consul.hcl"
 
@@ -183,7 +186,8 @@ ui_config {
 }
 EOF
 
-log "INFO" "Created Consul configuration file at '$SYSTEM_DIR/consul.service'."
+log "INFO" "Created Consul service file at '$SYSTEM_DIR/consul.service'."
+
 tee $SYSTEM_DIR/consul.service <<EOF
 [Unit]
 Description="HashiCorp Consul - A service mesh solution"
@@ -212,7 +216,17 @@ tee $CONSUL_CONFIG_DIR/consul.env <<EOF
 
 EOF
 
-log "INFO" "Created Consul service file at '$SYSTEM_DIR/consul.service'."
+log "INFO" "Retrieving CONSUL license file..."
+retrieve_license_from_awssm "${license_text_arn}"
+
+log "INFO" "Retrieving CONSUL TLS certificate..."
+retrieve_certs_from_awssm "${agent_cert_arn}" "$CONSUL_TLS_CERTS_DIR/consul-cert.pem"
+log "INFO" "Retrieving CONSUL TLS private key..."
+retrieve_certs_from_awssm "${agent_key_arn}" "$CONSUL_TLS_CERTS_DIR/consul-key.pem"
+log "INFO" "Retrieving CONSUL TLS CA bundle..."
+retrieve_certs_from_awssm "${ca_cert_arn}" "$CONSUL_TLS_CERTS_DIR/consul-ca.pem"
+
+
 
 log "INFO" "Setting permissions for Consul configuration directory and files..."
 chown -R consul:consul $CONSUL_CONFIG_DIR

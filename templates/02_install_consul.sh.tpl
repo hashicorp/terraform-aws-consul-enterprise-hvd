@@ -11,8 +11,6 @@ CONSUL_USER="consul"
 CONSUL_GROUP="consul"
 CONSUL_CONFIG_DIR="/etc/consul.d"
 
-useradd --system --home $CONSUL_CONFIG_DIR --shell /bin/false $CONSUL_USER
-
 
 LOGFILE="/var/log/consul-cloud-init.log"
 
@@ -119,6 +117,8 @@ function install_consul_binary {
 
 	log "INFO" "$${PRODUCT} binary installed successfully at $CONSUL_BIN_DIR/consul"
 }
+log "INFO" "Creating Consul user and group and $CONSUL_CONFIG_DIR"
+useradd --system --home $CONSUL_CONFIG_DIR --shell /bin/false $CONSUL_USER
 
 OS_ARCH=$(detect_architecture)
 log "INFO" "Detected architecture: $OS_ARCH"
@@ -127,9 +127,3 @@ log "INFO" "Checksum verification completed successfully for $PRODUCT version $C
 log "INFO" "Installing $PRODUCT version $CONSUL_VERSION for architecture $OS_ARCH"
 install_consul_binary "$OS_ARCH"
 
-# curl -Lo consul.zip https://releases.hashicorp.com/consul/${consul_version}/consul_${consul_version}_linux_$DLARCH.zip
-
-# unzip consul.zip
-# sudo install consul /usr/local/bin/
-
-# rm -f consul.zip consul
