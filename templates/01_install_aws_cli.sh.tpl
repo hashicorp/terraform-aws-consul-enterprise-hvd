@@ -12,6 +12,16 @@ function log {
   echo "$log_entry" | tee -a "$LOGFILE"
 }
 
+function exit_script {
+  if [[ "$1" == 0 ]]; then
+    log "INFO" "nomad_custom_data script finished successfully!"
+  else
+    log "ERROR" "nomad_custom_data script finished with error code $1."
+  fi
+
+  exit "$1"
+}
+
 function detect_os_distro {
   local OS_DISTRO_NAME=$(grep "^NAME=" /etc/os-release | cut -d"\"" -f2)
   local OS_DISTRO_DETECTED

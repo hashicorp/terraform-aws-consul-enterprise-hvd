@@ -25,6 +25,16 @@ function log {
   echo "$log_entry" | tee -a "$LOGFILE"
 }
 
+function exit_script {
+  if [[ "$1" == 0 ]]; then
+    log "INFO" "nomad_custom_data script finished successfully!"
+  else
+    log "ERROR" "nomad_custom_data script finished with error code $1."
+  fi
+
+  exit "$1"
+}
+
 function detect_architecture {
   local ARCHITECTURE=""
   local OS_ARCH_DETECTED=$(uname -m)
@@ -42,6 +52,7 @@ function detect_architecture {
     *)
       log "ERROR" "Unsupported architecture detected: '$OS_ARCH_DETECTED'. "
 		  exit_script 1
+			;;
   esac
 
   echo "$ARCHITECTURE"
