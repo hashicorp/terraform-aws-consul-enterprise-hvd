@@ -12,6 +12,16 @@ function log {
   echo "$log_entry" | tee -a "$LOGFILE"
 }
 
+function exit_script {
+  if [[ "$1" == 0 ]]; then
+    log "INFO" "nomad_custom_data script finished successfully!"
+  else
+    log "ERROR" "nomad_custom_data script finished with error code $1."
+  fi
+
+  exit "$1"
+}
+
 function detect_os_distro {
   local OS_DISTRO_NAME=$(grep "^NAME=" /etc/os-release | cut -d"\"" -f2)
   local OS_DISTRO_DETECTED
@@ -32,6 +42,7 @@ function detect_os_distro {
     *)
       log "ERROR" "'$OS_DISTRO_NAME' is not a supported Linux OS distro for this Consul module."
       exit_script 1
+			;;
   esac
 
   echo "$OS_DISTRO_DETECTED"
@@ -55,8 +66,12 @@ function install_awscli {
       if [[ "$OS_DISTRO" == "ubuntu" || "$OS_DISTRO" == "debian" ]]; then
         apt-get update -y
         apt-get install unzip -y
-      elif [[ "$OS_DISTRO" == "centos" || "$OS_DISTRO" == "rhel" || "$OS_DISTRO" == "al2023" ]]; then
+      elif [[ "$OS_DISTRO" == "centos" || "$OS_DISTRO" == "rhel" ]]; then
         yum install unzip -y
+      elif [[ "$OS_DISTRO" == "al2023" ]]; then
+        dnf install unzip -y
+        log "INFO" "Enabling gnupg2-full for Amazon Linux 2023."
+        dnf swap gnupg2-minimal gnupg2-full -y
       else
         log "ERROR" "Unable to install required 'unzip' utility. Exiting."
         exit_script 2

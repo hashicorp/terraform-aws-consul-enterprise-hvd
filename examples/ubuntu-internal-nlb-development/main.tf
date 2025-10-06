@@ -7,7 +7,7 @@ module "consul_development" {
   source = "../.."
 
   # Instance Configuration
-  ami_id               = data.aws_ami.amazonlinux.id
+  ec2_ami_id           = var.ec2_ami_id
   instance_type        = "m5.large"
   key_name             = aws_key_pair.server_ssh.id
   vpc_id               = data.aws_vpc.default.id
@@ -46,9 +46,9 @@ module "consul_development" {
     primary_datacenter    = "dc1"
     license_text_arn      = aws_secretsmanager_secret.consul_license_text.arn
     # consul_ca_cert        = aws_secretsmanager_secret.consul_ca_cert.arn
-    ca_cert_arn           = aws_secretsmanager_secret.consul_ca_cert.arn
-    agent_cert_arn        = aws_secretsmanager_secret.consul_agent_cert.arn
-    agent_key_arn         = aws_secretsmanager_secret.consul_agent_key.arn
+    ca_cert_arn      = aws_secretsmanager_secret.consul_ca_cert.arn
+    agent_cert_arn   = aws_secretsmanager_secret.consul_agent_cert.arn
+    agent_key_arn    = aws_secretsmanager_secret.consul_agent_key.arn
     ui               = true
     consul_log_level = "INFO"
   }
