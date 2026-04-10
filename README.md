@@ -11,8 +11,7 @@ This module requires the following to already be in place in AWS:
 - An AWS account
 - A VPC with at least 3 availability zones
 - An S3 Bucket for snapshots
-- Certificates added to AWS Systems Manager (SSM)
-- Consul License added to AWS Systems Manager (SSM)
+- TLS certificate material and the Consul license stored in AWS Secrets Manager, with the corresponding secret ARNs passed to `consul_agent`
 - An AMI to launch ASG instances from
 - List of AWS subnet IDs for instance(s) to be deployed into
 - List of subnet IDs to provision internal NLB interfaces within (optional)
@@ -28,6 +27,8 @@ The `examples/amazonlinux-internal-nlb-development` folder uses public subnets a
 ## Docs
 
 Additional documentation for customization and usage can be found in the [docs](./docs/) folder.
+
+The module retrieves `consul_agent.license_text_arn`, `consul_agent.ca_cert_arn`, `consul_agent.agent_cert_arn`, and `consul_agent.agent_key_arn` from AWS Secrets Manager when those values are Secrets Manager ARNs. If a value is not a Secrets Manager ARN, the module writes the provided value directly to disk, but Secrets Manager is the intended and recommended workflow.
 
 ## Module support
 
@@ -113,8 +114,8 @@ Please note that there is no official Service Level Agreement (SLA) for support 
 | <a name="input_consul_install_version"></a> [consul\_install\_version](#input\_consul\_install\_version) | Version of Consul to install, eg. '1.19.0+ent' | `string` | `"1.19.2+ent"` | no |
 | <a name="input_consul_nodes"></a> [consul\_nodes](#input\_consul\_nodes) | Number of Consul nodes to deploy. | `number` | `3` | no |
 | <a name="input_disk_params"></a> [disk\_params](#input\_disk\_params) | Disk parameters to use for the cluster nodes' block devices. | <pre>object({<br/>    root = object({<br/>      volume_type = string,<br/>      volume_size = number,<br/>      iops        = number<br/>    }),<br/>    data = object({<br/>      volume_type = string,<br/>      volume_size = number,<br/>      iops        = number<br/>    })<br/>  })</pre> | <pre>{<br/>  "data": {<br/>    "iops": 5000,<br/>    "volume_size": 100,<br/>    "volume_type": "io1"<br/>  },<br/>  "root": {<br/>    "iops": 0,<br/>    "volume_size": 32,<br/>    "volume_type": "gp2"<br/>  }<br/>}</pre> | no |
-| <a name="input_ec2_ami_id"></a> [ec2\_ami\_id](#input\_ec2\_ami\_id) | Custom AMI ID for Boundary EC2 Launch Template. If specified, value of `os_distro` must coincide with this custom AMI OS distro. | `string` | `null` | no |
-| <a name="input_ec2_os_distro"></a> [ec2\_os\_distro](#input\_ec2\_os\_distro) | Linux OS distribution for Boundary EC2 instance. Choose from `amzn2`, `ubuntu`, `rhel`, `centos`. | `string` | `"ubuntu"` | no |
+| <a name="input_ec2_ami_id"></a> [ec2\_ami\_id](#input\_ec2\_ami\_id) | Custom AMI ID for Consul EC2 Launch Template. If specified, value of `os_distro` must coincide with this custom AMI OS distro. | `string` | `null` | no |
+| <a name="input_ec2_os_distro"></a> [ec2\_os\_distro](#input\_ec2\_os\_distro) | Linux OS distribution for Consul EC2 instance. Choose from `amzn2`, `ubuntu`, `rhel`, `centos`. | `string` | `"ubuntu"` | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | EC2 instance type to launch. | `string` | `"m5.large"` | no |
 | <a name="input_permit_all_egress"></a> [permit\_all\_egress](#input\_permit\_all\_egress) | Whether broad (0.0.0.0/0) egress should be permitted on cluster nodes. If disabled, additional rules must be added to permit HTTP(S) and other necessary network access. | `bool` | `true` | no |
 | <a name="input_route53_resolver_pool"></a> [route53\_resolver\_pool](#input\_route53\_resolver\_pool) | Enable .consul domain resolution with Route53 | <pre>object({<br/>    enabled         = bool<br/>    override_domain = optional(string)<br/>  })</pre> | <pre>{<br/>  "enabled": false<br/>}</pre> | no |
