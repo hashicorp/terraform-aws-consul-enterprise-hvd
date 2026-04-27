@@ -132,7 +132,7 @@ variable "asg_extra_tags" {
 
 variable "ec2_os_distro" {
   type        = string
-  description = "Linux OS distribution for Boundary EC2 instance. Choose from `amzn2`, `ubuntu`, `rhel`, `centos`."
+  description = "Linux OS distribution for Consul EC2 instance. Choose from `amzn2`, `ubuntu`, `rhel`, `centos`."
   default     = "ubuntu"
 
   validation {
@@ -142,7 +142,7 @@ variable "ec2_os_distro" {
 }
 variable "ec2_ami_id" {
   type        = string
-  description = "Custom AMI ID for Boundary EC2 Launch Template. If specified, value of `os_distro` must coincide with this custom AMI OS distro."
+  description = "Custom AMI ID for Consul EC2 Launch Template. If specified, value of `os_distro` must coincide with this custom AMI OS distro."
   default     = null
 
   validation {
