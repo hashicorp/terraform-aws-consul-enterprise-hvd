@@ -2,7 +2,7 @@
 
 In this deployment the requirements are kept to a minimum and should provide an example of how resources are used but **not to be used in production**.
 
-Data sources are configured to find the default VPC in the current account and region and deploy to the public subnets. TLS certificates are generated via Terraform and an initial root token is also injected via cloud-init. TLS certificates are created with appropriate flags and are created and automatically added to SSM secrets.
+Data sources are configured to find the default VPC in the current account and region and deploy to the public subnets. TLS certificates are generated via Terraform and an initial root token is also injected via cloud-init. TLS certificates and the Consul license are created with appropriate flags and stored in AWS Secrets Manager before their ARNs are passed to the module.
 
 ## Usage
 

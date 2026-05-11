@@ -11,8 +11,7 @@ This module requires the following to already be in place in AWS:
 - An AWS account
 - A VPC with at least 3 availability zones
 - An S3 Bucket for snapshots
-- Certificates added to AWS Systems Manager (SSM)
-- Consul License added to AWS Systems Manager (SSM)
+- TLS certificate material and the Consul license stored in AWS Secrets Manager, with the corresponding secret ARNs passed to `consul_agent`
 - An AMI to launch ASG instances from
 - List of AWS subnet IDs for instance(s) to be deployed into
 - List of subnet IDs to provision internal NLB interfaces within (optional)
@@ -28,6 +27,8 @@ The `examples/amazonlinux-internal-nlb-development` folder uses public subnets a
 ## Docs
 
 Additional documentation for customization and usage can be found in the [docs](./docs/) folder.
+
+The module retrieves `consul_agent.license_text_arn`, `consul_agent.ca_cert_arn`, `consul_agent.agent_cert_arn`, and `consul_agent.agent_key_arn` from AWS Secrets Manager when those values are Secrets Manager ARNs. If a value is not a Secrets Manager ARN, the module writes the provided value directly to disk, but Secrets Manager is the intended and recommended workflow.
 
 ## Module support
 

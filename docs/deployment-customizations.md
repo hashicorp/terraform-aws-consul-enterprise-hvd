@@ -2,11 +2,11 @@
 
 ## TLS
 
-Certificates are provided at startup via cloud-init. Follow the example to structure your certificates correctly.
+Certificates are provided at startup via cloud-init. The module reads `consul_agent.ca_cert_arn`, `consul_agent.agent_cert_arn`, and `consul_agent.agent_key_arn` from AWS Secrets Manager when those values are Secrets Manager ARNs. If a value is not a Secrets Manager ARN, the module treats it as the literal base64-encoded certificate content. Follow the example to structure your certificates correctly.
 
 ## Adding a Consul license
 
-To see an example of how to automate the addition of your Consul license to SSM, place the license file in the example directory. The Terraform module will handle the rest.
+To see an example of how to automate the addition of your Consul license to AWS Secrets Manager, place the license file in the example directory. The example creates the secret and passes its ARN to the module. If `consul_agent.license_text_arn` is not a Secrets Manager ARN, the module treats the provided value as the literal license text.
 
 ## Customizing options with tf.autovars.tfvars
 
