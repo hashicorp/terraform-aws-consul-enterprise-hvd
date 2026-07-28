@@ -8,7 +8,9 @@ Data sources are configured to find the default VPC in the current account and r
 
 ```shell
 # enter default example
-cd ./examples/amazonlinux-internal-nlb-development
+cd ./examples/ubuntu-internal-nlb-development
+# copy the example tfvars and fill in your values
+cp terraform.tfvars.example terraform.tfvars
 # create the license file and save it in a files directory
 mkdir ./files
 echo $CONSUL_LICENSE > ./files/consul.hclic
