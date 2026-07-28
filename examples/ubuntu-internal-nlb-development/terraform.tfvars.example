@@ -1,7 +1,7 @@
 #------------------------------------------------------------------------------
 # Common
 #------------------------------------------------------------------------------
-# Override if needed
+# Update if needed
 region         = "us-east-1"
 environment_name = "development"
 tag_owner        = "email@example.com"
