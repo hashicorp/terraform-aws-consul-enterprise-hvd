@@ -25,6 +25,35 @@ The `examples/amazonlinux-internal-nlb-consul-primary` folder contains the defau
 
 The `examples/amazonlinux-internal-nlb-development` folder uses public subnets and self-signed certificates for a **non-production environment** but illustrates how to enable all features of the root module.
 
+## Usage
+
+Configure the prerequisites listed above, then follow these steps.
+
+In the [`examples/`](./examples/) directory you'll find subdirectories with ready-made Terraform configurations for deploying this module. Select the example that matches your use case and copy its contents into a new working directory.
+
+> **Example structure for managing multiple Consul deployments:**
+>
+> ```
+> .
+> └── environments
+>     ├── production
+>     │   ├── backend.tf
+>     │   ├── main.tf
+>     │   ├── terraform.tfvars
+>     │   ├── variables.tf
+>     │   └── variables_provider.tf
+>     └── sandbox
+>         ├── backend.tf
+>         ├── main.tf
+>         ├── terraform.tfvars
+>         ├── variables.tf
+>         └── variables_provider.tf
+> ```
+>
+> This structure keeps two separate Consul deployments — one for sandbox and one for production — each with their own state and configuration.
+
+> **Note:** `variables_provider.tf` defines provider configuration variables (e.g. `region`) that are separate from module variables. It must be copied from the chosen example directory alongside the other files.
+
 ## Docs
 
 Additional documentation for customization and usage can be found in the [docs](./docs/) folder.
