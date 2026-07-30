@@ -1,5 +1,53 @@
 # Example Scenario - Amazon Linux | Internal Network Load Balancer (NLB) | Primary Consul cluster
 
+This example deploys a production-oriented Consul Enterprise primary cluster. TLS certificates and secrets are expected to already exist in AWS Secrets Manager. The ARNs are supplied via `terraform.tfvars`.
+
+## Deployment
+
+### Step 1 — AWS Account Preparation
+
+Export your AWS credentials so Terraform can authenticate.
+
+### Step 2 — Copy the Example tfvars
+
+```shell
+cd ./examples/amazonlinux-internal-nlb-consul-primary
+cp terraform.tfvars.example terraform.tfvars
+```
+### Step 3 — Update License
+
+Store your Consul Enterprise license as an AWS Secrets Manager secret and note the ARN. Supply it as `consul_agent.license_text_arn` in your `.tfvars` file:
+
+```hcl
+consul_agent = {
+  license_text_arn = "arn:aws:secretsmanager:<region>:<account>:secret:<name>"
+  ...
+}
+```
+
+### Step 4 — Update Configuration
+
+Open `terraform.tfvars` and set at minimum the required values below.
+
+**Region (required)**
+
+You must explicitly set `region` to your target AWS region. This value is passed directly to the AWS provider in [`main.tf`](main.tf) — Terraform will fail with an error if it is missing or empty.
+
+**Other required values**
+
+| Variable | Description |
+|---|---|
+| `environment_name` | Unique name used to prefix all resources |
+| `tag_owner` | Email or identifier of the deployer |
+| `vpc_id` | ID of the VPC to deploy into |
+| `instance_subnets` | List of subnet IDs for the EC2 instances |
+| `internal_nlb_subnets` | List of subnet IDs for the internal NLB |
+| `consul_agent.ca_cert_arn` | Secrets Manager ARN for the Consul CA certificate |
+| `consul_agent.agent_cert_arn` | Secrets Manager ARN for the Consul agent certificate |
+| `consul_agent.agent_key_arn` | Secrets Manager ARN for the Consul agent private key |
+| `consul_agent.gossip_encryption_key` | Gossip encryption key (`consul keygen`) |
+
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 

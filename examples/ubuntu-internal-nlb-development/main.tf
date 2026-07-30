@@ -1,7 +1,9 @@
 # Copyright IBM Corp. 2024, 2025
 # SPDX-License-Identifier: MPL-2.0
 
-
+provider "aws" {
+  region = var.region
+}
 
 module "consul_development" {
   source = "../.."
@@ -41,8 +43,8 @@ module "consul_development" {
     bootstrap             = true
     server                = true
     datacenter            = "dc1"
-    gossip_encryption_key = var.gossip_encryption_key
-    initial_token         = var.initial_token
+    gossip_encryption_key = local.gossip_encryption_key
+    initial_token         = local.initial_token
     primary_datacenter    = "dc1"
     license_text_arn      = aws_secretsmanager_secret.consul_license_text.arn
     # consul_ca_cert        = aws_secretsmanager_secret.consul_ca_cert.arn
@@ -58,7 +60,7 @@ module "consul_development" {
     interval     = "60m"
     retention    = 24
     s3_bucket_id = aws_s3_bucket.snapshots.id
-    token        = var.initial_token
+    token        = local.initial_token
   }
 }
 
