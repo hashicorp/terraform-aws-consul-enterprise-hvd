@@ -58,7 +58,6 @@ data "aws_iam_policy_document" "consul_secrets" {
   statement {
     effect = "Allow"
     actions = [
-      "ssm:GetParameter",
       "secretsmanager:GetSecretValue"
     ]
     resources = [
