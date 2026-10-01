@@ -29,7 +29,7 @@ The `examples/amazonlinux-internal-nlb-development` folder uses public subnets a
 
 Configure the prerequisites listed above, then follow these steps.
 
-In the [`examples/`](./examples/) directory you'll find subdirectories with ready-made Terraform configurations for deploying this module. Select the example that matches your use case and copy its contents into a new working directory.
+In the [`examples/`](https://github.com/hashicorp/terraform-aws-consul-enterprise-hvd/blob/0.2.0/examples/) directory you'll find subdirectories with ready-made Terraform configurations for deploying this module. Select the example that matches your use case and copy its contents into a new working directory.
 
 > **Example structure for managing multiple Consul deployments:**
 >
@@ -56,7 +56,7 @@ In the [`examples/`](./examples/) directory you'll find subdirectories with read
 
 ## Docs
 
-Additional documentation for customization and usage can be found in the [docs](./docs/) folder.
+Additional documentation for customization and usage can be found in the [docs](https://github.com/hashicorp/terraform-aws-consul-enterprise-hvd/blob/0.2.0/docs/) folder.
 
 ## Module support
 
