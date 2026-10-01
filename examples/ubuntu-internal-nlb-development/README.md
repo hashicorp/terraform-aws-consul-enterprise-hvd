@@ -51,7 +51,7 @@ Open `terraform.tfvars` and set at minimum the required values below.
 
 **Region (required)**
 
-You must explicitly set `region` to your target AWS region. This value is passed directly to the AWS provider in [`main.tf`](main.tf) — Terraform will fail with an error if it is missing or empty.
+You must explicitly set `region` to your target AWS region. This value is passed directly to the AWS provider in [`main.tf`](https://github.com/hashicorp/terraform-aws-consul-enterprise-hvd/blob/0.2.0/examples/ubuntu-internal-nlb-development/main.tf) — Terraform will fail with an error if it is missing or empty.
 
 ## Usage
 
